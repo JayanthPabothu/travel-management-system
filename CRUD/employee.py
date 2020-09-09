@@ -43,7 +43,7 @@ def crud_employee():
     tk.ttk.Button(employee, text="Submit").grid(column=0, row=24, columnspan=2)
 
     # Makes the widgets responsive and centered
-    n_rows = 40
+    n_rows = 20
     n_columns = 2
     for i in range(n_rows):
         employee.grid_rowconfigure(i,  weight =1)

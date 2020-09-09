@@ -1,14 +1,25 @@
 import tkinter as tk
 from tkinter import ttk
 from functools import partial
-from CRUD import flight, company
+from CRUD import flight, company, amenities, bus, car, city, employee, route
 
 def create_query(num):
-    print(table_name[num]+" Create")
-    if (num == 2):
-        flight.run()
+    if (num == 0):
+        bus.crud_bus()
+    elif (num == 1):
+        car.crud_car()
+    elif (num == 2):
+        flight.crud_flight()
+    elif (num == 3):
+        city.crud_city()
+    elif (num == 4):
+        route.crud_route()
+    elif (num == 5):
+        amenities.crud_amenities()
     elif (num == 6):
         company.crud_company()
+    elif (num == 7):
+        employee.crud_employee()
 
 def update_query(num):
     print(table_name[num]+" Update")

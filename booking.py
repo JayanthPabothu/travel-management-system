@@ -66,7 +66,7 @@ for i in range(0, no_of_results):
     # amount.grid(column=3, row=2)
     # amount_value.grid(column=3, row=3)
 
-# Makes the widgets rsponsive and centered
+# Makes the widgets responsive and centered
 n_rows = 20
 n_columns = 4
 for i in range(n_rows):

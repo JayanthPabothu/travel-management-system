@@ -8,7 +8,7 @@ def crud_route():
     route.title('Travel Management System')
     route.geometry('720x500')
 
-    tk.Label(route, text="Price", font=('Helvetica', '25')).grid(column=0, row=0, columnspan=2)
+    tk.Label(route, text="Route", font=('Helvetica', '25')).grid(column=0, row=0, columnspan=2)
     tk.Label(route, text="Time taken").grid(column=0, row=1)
     tk.Label(route, text="City code").grid(column=0, row=2)
 
@@ -18,7 +18,7 @@ def crud_route():
     tk.ttk.Entry(route).grid(column=1, row=2)
 
 
-    tk.ttk.Button(route, xt="Submit").grid(column=0, row=13, columnspan=2)
+    tk.ttk.Button(route, text="Submit").grid(column=0, row=13, columnspan=2)
 
     # Makes the widgets responsive and centered
     n_rows = 20

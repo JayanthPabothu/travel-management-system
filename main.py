@@ -10,7 +10,7 @@ heading = tk.Label(window, text="Travel Management System", font=('Helvetica', '
 login_head = tk.Label(window, text="Login here", bg='grey',font=('Helvetica', '20'))
 register_head = tk.Label(window, text="Register here", bg='grey',font=('Helvetica', '20'))
 
-description = tk.Label(window, bg='grey', text="\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+description = tk.Label(window, bg='grey', text="\n\n\n\n\n\n")
 
 
 # ----------Creating labels---------
@@ -26,8 +26,10 @@ register_DOB.append(tk.Label(window, text="Enter yor Date of Birth"))
 register_DOB.append(tk.Label(window, text="D:"))
 register_DOB.append(tk.Label(window, text="M:"))
 register_DOB.append(tk.Label(window, text="Y:"))
-register_address=tk.Label(window, text="Enter your Address")
-
+register_street=tk.Label(window, text="Street")
+register_city = tk.Label(window, text="City")
+register_zipcode = tk.Label(window, text="Zipcode")
+register_contact = tk.Label(window, text="Contact number")
 # ----------Creating entries----------
 login_entry_email = tk.Entry()
 login_entry_password = tk.Entry()
@@ -36,7 +38,10 @@ register_entry_name = tk.Entry()
 register_entry_email = tk.Entry()
 register_entry_password = tk.Entry()
 register_entry_password_again = tk.Entry()
-register_entry_address = tk.Entry()
+register_entry_street = tk.Entry()
+register_entry_city = tk.Entry()
+register_entry_zipcode = tk.Entry()
+register_entry_contact = tk.Entry()
 register_entry_day = tk.Entry()
 register_entry_month = tk.Entry()
 register_entry_year = tk.Entry()
@@ -61,25 +66,31 @@ register_name.grid(column=2, row=3)
 register_email.grid(column=2, row=4)
 register_password.grid(column=2, row=5)
 register_password_again.grid(column=2, row=6)
-register_address.grid(column=2, row=7)
-register_DOB[0].grid(column=2, row=8)
+register_street.grid(column=2, row=7)
+register_city.grid(column=2, row=8)
+register_zipcode.grid(column=2, row=9)
+register_contact.grid(column=2, row=10)
+register_DOB[0].grid(column=2, row=11)
 
 # register entries
 register_entry_name.grid(column=3, row=3)
 register_entry_email.grid(column=3, row=4)
 register_entry_password.grid(column=3, row=5)
 register_entry_password_again.grid(column=3, row=6)
-register_entry_address.grid(column=3, row=7)
-register_entry_day.grid(column=3, row=8)
-register_entry_month.grid(column=3, row=8)
-register_entry_year.grid(column=3, row=8)
+register_entry_street.grid(column=3, row=7)
+register_entry_city.grid(column=3, row=8)
+register_entry_zipcode.grid(column=3, row=9)
+register_entry_contact.grid(column=3, row=10)
+register_entry_day.grid(column=3, row=11)
+register_entry_month.grid(column=3, row=11)
+register_entry_year.grid(column=3, row=11)
 
-register_button.grid(column=2, row=9, columnspan=2)
+register_button.grid(column=2, row=12, columnspan=2)
 
 
 
 
-n_rows = 10
+n_rows = 15
 n_columns = 4
 for i in range(n_rows):
     window.grid_rowconfigure(i,  weight =1)
