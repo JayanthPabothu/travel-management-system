@@ -1,9 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
 def booking_run(source, dest, mode, date):
-
-    print(date)
     booking = tk.Tk()
     booking.resizable(height = False, width = False)
     booking.title('Travel Management System')
@@ -38,30 +35,8 @@ def booking_run(source, dest, mode, date):
         seat_type.current(0)
 
         submit = tk.ttk.Button(booking, text="Select")
-
-        # # --------Placing on grid----------
-        #
-        # # Column 0
-        # # company.grid(column=0, row=1)
-        # journey_begins.grid(column=0, row=2)
-        # journey_begins_value.grid(column=0, row=3)
         seat_type.grid(column=0, row=4+(i*4))
-        #
-        # # Column 1
-        # duration.grid(column=1, row=2)
-        # duration_value.grid(column=1, row=3)
-        # seats.grid(column=1, row=4+(i*4))
-        #
-        # # Column 2
-        # journey_ends.grid(column=2, row=2)
-        # journey_ends_value.grid(column=2, row=3)
         submit.grid(column=2, row=4+(i*4))
-        #
-        # # Column 3
-        # amount.grid(column=3, row=2)
-        # amount_value.grid(column=3, row=3)
-
-    # Makes the widgets responsive and centered
     n_rows = 20
     n_columns = 4
     for i in range(n_rows):

@@ -1,5 +1,50 @@
 import tkinter as tk
 from tkinter.ttk import *
+from tkinter import messagebox
+import mysql.connector as mysql
+
+def register_user():
+    name = register_entry_name.get()
+    email = register_entry_email.get()
+    password = register_entry_password.get()
+    password_again = register_entry_password_again.get()
+    # DOB_day =
+    # DOB_month =
+    # DOB_year =
+    gender = g.get()
+    street = register_entry_street.get()
+    city = register_entry_city.get()
+    zipcode = register_entry_zipcode.get()
+    phone = register_entry_contact.get()
+    credit = 5
+    id = 3
+
+    if(name=='' or email=='' or password=='' or street=='' or city=='' or phone==''):
+        messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
+    else:
+        if(password != password_again):
+            messagebox.showwarning("Invalid request", "Your passwords don't match. Please try again.")
+        else:
+            gender_new = ''
+            if (gender == 1):
+                gender_new = 'M'
+            elif (gender == 2):
+                gender_new = 'F'
+            elif (gender == 3):
+                gender_new = 'T'
+
+            con = mysql.connect(
+                host="localhost",
+                user="root",
+                password="testpassword",
+                database="TMS"
+            )
+            cursor = con.cursor()
+            cursor.execute("INSERT INTO CUSTOMER VALUES(%s, %s, %s, %s,%s, %s, %s,%s, %s, %s);", [id, name, email, password, gender_new, street, city, int(zipcode), int(phone), credit])
+            cursor.execute("commit")
+
+            messagebox.showinfo("Status", "You have successfully registered!")
+            con.close()
 
 window = tk.Tk()
 window.resizable(height = False, width = False)
@@ -22,7 +67,7 @@ register_email = tk.Label(window, text="Enter your Email Id")
 register_password = tk.Label(window, text="Enter your Password")
 register_password_again =  tk.Label(window, text="Enter your Password again")
 register_DOB = []
-register_DOB.append(tk.Label(window, text="Enter yor Date of Birth(eg. 10 08 2020)"))
+register_DOB.append(tk.Label(window, text="Enter yor Date of Birth (dd mm yyyy)"))
 register_DOB.append(tk.Label(window, text="D:"))
 register_DOB.append(tk.Label(window, text="M:"))
 register_DOB.append(tk.Label(window, text="Y:"))
@@ -55,7 +100,7 @@ gender3 = tk.Radiobutton(window, text="T", variable=g, value=3)
 
 
 login_button = Button(window, text="Login")
-register_button = Button(window, text="Register")
+register_button = Button(window, text="Register", command=register_user)
 
 # ----------Placing on grid-----------
 heading.grid(columnspan=7)
