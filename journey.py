@@ -1,8 +1,20 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
+import booking
+
 
 def journey_screen():
+
+
+    def search_booking():
+        source = start_city_options.get()
+        dest = dest_city_options.get()
+        mode = mode_of_trans_options.get()
+        date = date_options.get()
+        booking.booking_run(source, dest, mode, date)
+
+
     journey = tk.Tk()
     journey.resizable(height = False, width = False)
     journey.title('Travel Management System')
@@ -69,7 +81,7 @@ def journey_screen():
 
     date_options.current()
 
-    get_details = tk.ttk.Button(journey, text="Get Details")
+    get_details = tk.ttk.Button(journey, text="Get Details", command=search_booking)
 
 
     # ---------Placing on grid---------
