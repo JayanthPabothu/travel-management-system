@@ -22,29 +22,41 @@ def register_user():
     if(name=='' or email=='' or password=='' or street=='' or city=='' or phone==''):
         messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
     else:
-        if(password != password_again):
-            messagebox.showwarning("Invalid request", "Your passwords don't match. Please try again.")
-        else:
-            gender_new = ''
-            if (gender == 1):
-                gender_new = 'M'
-            elif (gender == 2):
-                gender_new = 'F'
-            elif (gender == 3):
-                gender_new = 'T'
-
-            con = mysql.connect(
+        con = mysql.connect(
                 host="localhost",
                 user="root",
                 password="testpassword",
                 database="TMS"
             )
-            cursor = con.cursor()
-            cursor.execute("INSERT INTO CUSTOMER VALUES(%s, %s, %s, %s,%s, %s, %s,%s, %s, %s);", [id, name, email, password, gender_new, street, city, int(zipcode), int(phone), credit])
-            cursor.execute("commit")
+        cursor = con.cursor()
+        args = cursor.callproc("CHECK_IF_EXISTS", (email, None))
+        con.close()
+        if(args == 0):
+            messagebox.showwarning("User already exists", "Try registering with different email-id.")
+        else:
+            if(password != password_again):
+                messagebox.showwarning("Invalid request", "Your passwords don't match. Please try again.")
+            else:
+                gender_new = ''
+                if (gender == 1):
+                    gender_new = 'M'
+                elif (gender == 2):
+                    gender_new = 'F'
+                elif (gender == 3):
+                    gender_new = 'T'
 
-            messagebox.showinfo("Status", "You have successfully registered!")
-            con.close()
+                con = mysql.connect(
+                    host="localhost",
+                    user="root",
+                    password="testpassword",
+                    database="TMS"
+                )
+                cursor = con.cursor()
+                cursor.execute("INSERT INTO CUSTOMER VALUES(%s, %s, %s, %s,%s, %s, %s,%s, %s, %s);", [id, name, email, password, gender_new, street, city, int(zipcode), int(phone), credit])
+                cursor.execute("commit")
+
+                messagebox.showinfo("Status", "You have successfully registered!")
+                con.close()
 
 window = tk.Tk()
 window.resizable(height = False, width = False)
