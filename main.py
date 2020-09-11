@@ -1,24 +1,48 @@
 import tkinter as tk
 from tkinter.ttk import *
-from tkinter import messagebox
 import mysql.connector as mysql
+from mysql.connector import Error
+import homepage
+
+
+def login_user():
+    email = login_entry_email.get()
+    password = login_entry_password.get()
+    con = mysql.connect(
+            host="localhost",
+            user="root",
+            password="testpassword",
+            database="TMS"
+        )
+    cursor = con.cursor()
+    cursor.execute("SELECT CUSTOMER_ID, CUSTOMER_NAME FROM CUSTOMER WHERE EMAIL_ID=%s AND CUSTOMER_PASSWORD=%s;", [str(email), str(password)])
+    records = cursor.fetchmany(size=1)
+    user_id = records[0][0]
+    user_name = records[0][1]
+    if (records == None):
+        messagebox.showwarning("Invalid request", "Please enter correct email/password")
+    else:
+        window.destroy()
+        homepage.homepage_screen(user_id, user_name)
+
 
 def register_user():
     name = register_entry_name.get()
     email = register_entry_email.get()
     password = register_entry_password.get()
     password_again = register_entry_password_again.get()
-    # DOB_day =
-    # DOB_month =
-    # DOB_year =
+    DOB_day = register_entry_day.get()
+    DOB_month = register_entry_month.get()
+    DOB_year = register_entry_year.get()
     gender = g.get()
     street = register_entry_street.get()
     city = register_entry_city.get()
     zipcode = register_entry_zipcode.get()
     phone = register_entry_contact.get()
+    dob = str(DOB_year)+'-'+str(DOB_month)+'-'+str(DOB_day)
     credit = 5
     id = 3
-
+    print(dob)
     if(name=='' or email=='' or password=='' or street=='' or city=='' or phone==''):
         messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
     else:
@@ -31,7 +55,8 @@ def register_user():
         cursor = con.cursor()
         args = cursor.callproc("CHECK_IF_EXISTS", (email, None))
         con.close()
-        if(args == 0):
+        print(args)
+        if(args[1] == 1):
             messagebox.showwarning("User already exists", "Try registering with different email-id.")
         else:
             if(password != password_again):
@@ -52,7 +77,7 @@ def register_user():
                     database="TMS"
                 )
                 cursor = con.cursor()
-                cursor.execute("INSERT INTO CUSTOMER VALUES(%s, %s, %s, %s,%s, %s, %s,%s, %s, %s);", [id, name, email, password, gender_new, street, city, int(zipcode), int(phone), credit])
+                cursor.execute("INSERT INTO CUSTOMER(CUSTOMER_NAME, EMAIL_ID, CUSTOMER_PASSWORD, GENDER, DOB, STREET, CITY, ZIPCODE, CONTACT_DETAILS, CREDIT_POINTS) VALUES(%s, %s, %s, %s, %s, %s, %s,%s, %s, %s);", [name, email, password, gender_new, dob,street, city, int(zipcode), int(phone), credit])
                 cursor.execute("commit")
 
                 messagebox.showinfo("Status", "You have successfully registered!")
@@ -111,7 +136,7 @@ gender2 = tk.Radiobutton(window, text="F", variable=g, value=2)
 gender3 = tk.Radiobutton(window, text="T", variable=g, value=3)
 
 
-login_button = Button(window, text="Login")
+login_button = Button(window, text="Login", command=login_user)
 register_button = Button(window, text="Register", command=register_user)
 
 # ----------Placing on grid-----------

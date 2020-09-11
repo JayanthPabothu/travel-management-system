@@ -1,27 +1,34 @@
 import tkinter as tk
 from tkinter import ttk
 import journey
+from functools import partial
+import update_user
+
 
 def get_journey():
     journey.journey_screen()
 
-def homepage_screen():
+def logout(homepage):
+    homepage.destroy()
+    import main
+
+def homepage_screen(user_id, user_name):
     homepage = tk.Tk()
     homepage.resizable(height = False, width = False)
     homepage.title('Travel Management System')
-    homepage.geometry('500x300')
+    homepage.geometry('600x400')
 
-    tk.Label(homepage, text="Welcome user",font=('Helvetica', '25')).grid(column=0, row=0, columnspan=2)
+    tk.Label(homepage, text="Welcome "+user_name,font=('Helvetica', '25')).grid(column=0, row=0, columnspan=2)
     tk.Label(homepage, text="Options:",font=('Helvetica', '15')).grid(column=0, row=1, columnspan=2)
 
     tk.ttk.Button(homepage, text="Book a ticket", command=get_journey).grid(column=0, columnspan=2,row=2)
     tk.ttk.Button(homepage, text="Get Booking History").grid(column=0, columnspan=2,row=3)
-    tk.ttk.Button(homepage, text="Edit Details").grid(column=0, columnspan=2,row=4)
-
+    tk.ttk.Button(homepage, text="Edit Details", command=partial(update_user.update_user, user_id, homepage)).grid(column=0, columnspan=2,row=4)
+    tk.ttk.Button(homepage, text="Logout", command=partial(logout, homepage)).grid(column=0, row=5, columnspan=2)
 
 
     # Makes the widgets responsive and centered
-    n_rows = 5
+    n_rows = 6
     n_columns = 2
     for i in range(n_rows):
         homepage.grid_rowconfigure(i,  weight =1)
@@ -31,4 +38,3 @@ def homepage_screen():
 
 
     homepage.mainloop()
-homepage_screen()
