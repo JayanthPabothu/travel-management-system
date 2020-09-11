@@ -2,28 +2,43 @@ import tkinter as tk
 from tkinter.ttk import *
 import mysql.connector as mysql
 from mysql.connector import Error
+from tkinter import messagebox
 import homepage
-
+import admin
 
 def login_user():
     email = login_entry_email.get()
     password = login_entry_password.get()
-    con = mysql.connect(
-            host="localhost",
-            user="root",
-            password="testpassword",
-            database="TMS"
-        )
-    cursor = con.cursor()
-    cursor.execute("SELECT CUSTOMER_ID, CUSTOMER_NAME FROM CUSTOMER WHERE EMAIL_ID=%s AND CUSTOMER_PASSWORD=%s;", [str(email), str(password)])
-    records = cursor.fetchmany(size=1)
-    user_id = records[0][0]
-    user_name = records[0][1]
-    if (records == None):
+
+    if(email == '' or password == ''):
         messagebox.showwarning("Invalid request", "Please enter correct email/password")
     else:
-        window.destroy()
-        homepage.homepage_screen(user_id, user_name)
+        con = mysql.connect(
+                host="localhost",
+                user="root",
+                password="testpassword",
+                database="TMS"
+            )
+        cursor = con.cursor()
+        cursor.execute("SELECT CUSTOMER_ID, CUSTOMER_NAME, CREDIT_POINTS FROM CUSTOMER WHERE EMAIL_ID=%s AND CUSTOMER_PASSWORD=%s;", [str(email), str(password)])
+        records = cursor.fetchmany(size=1)
+        print(records)
+        if (len(records) == 0):
+            cursor.execute("SELECT ADMIN_ID, ADMIN_NAME FROM SYS_ADMIN WHERE EMAIL_ID=%s AND ADMIN_PASSWORD=%s;", [str(email), str(password)])
+            records = cursor.fetchmany(size=1)
+            if (len(records) == 0):
+                messagebox.showwarning("Invalid request", "Please enter correct email/password")
+            else:
+                admin_id = records[0][0]
+                admin_name = records[0][1]
+                window.destroy()
+                admin.admin_screen(admin_id, admin_name)
+        else:
+            user_id = records[0][0]
+            user_name = records[0][1]
+            credit_points = records[0][2]
+            window.destroy()
+            homepage.homepage_screen(user_id, user_name, credit_points)
 
 
 def register_user():

@@ -1,7 +1,27 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
+import mysql.connector as mysql
 
 def crud_amenities():
+
+
+    def insert_amenities():
+        amenities2 = amenities1.get()
+
+        con = mysql.connect(
+                host="localhost",
+                user="root",
+                password="testpassword",
+                database="TMS"
+            )
+        cursor = con.cursor()
+        cursor.execute("INSERT INTO AMENITIES(AMENITY_SET) VALUES(%s);", [amenities2])
+        cursor.execute("commit")
+        cursor.close()
+        con.close()
+        amenities.destroy()
+        messagebox.showinfo("Request successful", "Successfully added amenities.")
 
     amenities = tk.Tk()
     amenities.resizable(height = False, width = False)
@@ -10,19 +30,14 @@ def crud_amenities():
 
     tk.Label(amenities, text="Amenities", font=('Helvetica', '25')).grid(column=0, row=0, columnspan=2)
     tk.Label(amenities, text="Amenity Set").grid(column=0, row=1)
-    tk.Label(amenities, text="Rating").grid(column=0, row=2)
-    tk.Label(amenities, text="Day set").grid(column=0, row=3)
-    tk.Label(amenities, text="Route Id").grid(column=0, row=4)
 
 
 
-    tk.ttk.Entry(amenities).grid(column=1, row=1)
-    tk.ttk.Entry(amenities).grid(column=1, row=2)
-    tk.ttk.Entry(amenities).grid(column=1, row=3)
-    tk.ttk.Entry(amenities).grid(column=1, row=4)
+    amenities1 = tk.ttk.Entry(amenities)
+    amenities1.grid(column=1, row=1)
 
 
-    tk.ttk.Button(amenities, text="Submit").grid(column=0, row=13, columnspan=2)
+    tk.ttk.Button(amenities, text="Submit", command=insert_amenities).grid(column=0, row=2, columnspan=2)
 
     # Makes the widgets responsive and centered
     n_rows = 20
