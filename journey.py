@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import datetime
 import booking
-
+import mysql.connector as mysql
+from tkinter import messagebox
 
 def journey_screen():
 
@@ -28,28 +29,34 @@ def journey_screen():
     mode_of_trans = tk.Label(journey, text="Mode of journey")
     date = tk.Label(journey, text="Date of journey")
 
-
+    con = mysql.connect(
+            host="localhost",
+            user="root",
+            password="testpassword",
+            database="TMS"
+        )
+    cursor = con.cursor()
+    cursor.execute("SELECT DISTINCT START_CITY FROM ROUTE")
+    records = cursor.fetchall()
     n_start = tk.StringVar()
     start_city_options = ttk.Combobox(journey, width = 20, textvariable = n_start)
-    start_city_options['values'] = ('Pune',
-                              'Kadapa',
-                              'Udaipur',
-                              'Vapi',
-                              'Panvel',
-                            )
-    start_city_options.current()
+    start_city_options['values'] = [
+                              city[0] for city in records
+                            ]
+    start_city_options.current(0)
 
+    cursor.execute("SELECT DISTINCT DEST_CITY FROM ROUTE")
+    records = cursor.fetchall()
     n_dest = tk.StringVar()
     dest_city_options = ttk.Combobox(journey, width = 20, textvariable = n_dest)
-    dest_city_options['values'] = ('Pune',
-                              'Kadapa',
-                              'Udaipur',
-                              'Vapi',
-                              'Panvel',
-                            )
+    dest_city_options['values'] = [
+                            city[0] for city in records
+                            ]
 
 
-    dest_city_options.current()
+    dest_city_options.current(1)
+    cursor.close()
+    con.close()
 
     n_mode = tk.StringVar()
     mode_of_trans_options = ttk.Combobox(journey, width = 20, textvariable = n_mode)
@@ -58,7 +65,7 @@ def journey_screen():
                                 'Bus',
                                 'Car'
                             )
-    mode_of_trans_options.current()
+    mode_of_trans_options.current(0)
 
     x = datetime.datetime.now()
     list_1 = []
@@ -79,7 +86,7 @@ def journey_screen():
                     list_1[6],
                 )
 
-    date_options.current()
+    date_options.current(0)
 
     get_details = tk.ttk.Button(journey, text="Get Details", command=search_booking)
 
@@ -107,3 +114,5 @@ def journey_screen():
         journey.grid_columnconfigure(i,  weight =1)
 
     journey.mainloop()
+# 
+# journey_screen()

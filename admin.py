@@ -7,6 +7,7 @@ def admin_screen(admin_id, admin_name):
 
 
     def create_query(num):
+
         if (num == 0):
             bus.crud_bus()
         elif (num == 1):
@@ -64,6 +65,6 @@ def admin_screen(admin_id, admin_name):
         admin.grid_rowconfigure(i,  weight =1)
     for i in range(n_columns):
         admin.grid_columnconfigure(i,  weight =1)
-
-    admin.mainloop()
-admin_screen(1, 'admin')
+# 
+#     admin.mainloop()
+# admin_screen(1, 'admin')

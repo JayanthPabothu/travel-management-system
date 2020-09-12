@@ -6,6 +6,14 @@ from tkinter import messagebox
 import homepage
 import admin
 
+
+
+def _from_rgb(rgb):
+    """translates an rgb tuple of int to a tkinter friendly color code
+    """
+    return "#%02x%02x%02x" % rgb
+
+
 def login_user():
     email = login_entry_email.get()
     password = login_entry_password.get()
@@ -101,15 +109,18 @@ def register_user():
 window = tk.Tk()
 window.resizable(height = False, width = False)
 window.title('Travel Management System')
-window.geometry('1080x720')
+window.geometry('720x420')
 heading = tk.Label(window, text="Travel Management System", font=('Helvetica', '25'))
 
 login_head = tk.Label(window, text="Login here", bg='grey',font=('Helvetica', '20'))
 register_head = tk.Label(window, text="Register here", bg='grey',font=('Helvetica', '20'))
 
-description = tk.Label(window, bg='grey', text="\n\n\n\n\n\n")
+background = tk.PhotoImage(file='Images/background.png')
+description = tk.Label(window, text="\n\n\n\n\n\n")
+background_label = tk.Label(window,  image=background)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-
+# window.configure(image=background)
 # ----------Creating labels---------
 login_email = tk.Label(window, text="Enter your Email Id")
 login_password = tk.Label(window, text="Enter your Password")
