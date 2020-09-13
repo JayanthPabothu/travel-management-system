@@ -1,29 +1,22 @@
-# importing only those functions which
-# are needed
-from tkinter import Tk, mainloop, TOP
-from tkinter.ttk import Button
+from tkinter import *
+from tkinter import font
 
-# time function used to calculate time
-from time import time
 
-# creating tkinter window
 root = Tk()
+root.title('Font Families')
+fonts=list(font.families())
+fonts.sort()
 
-button = Button(root, text = 'Geeks')
-button.pack(side = TOP, pady = 5)
+display = Listbox(root)
+display.pack(fill=BOTH, expand=YES, side=LEFT)
 
-print('Running...')
-# Calculating starting time
-start = time()
+scroll = Scrollbar(root)
+scroll.pack(side=RIGHT, fill=Y, expand=NO)
 
-# in after method 5000 miliseconds
-# is passed i.e after 5 seconds
-# main window i.e root window will
-# get destroyed
-root.after(5000, root.destroy)
+scroll.configure(command=display.yview)
+display.configure(yscrollcommand=scroll.set)
 
-mainloop()
+for item in fonts:
+    display.insert(END, item)
 
-# calculating end time
-end = time()
-print('Destroyed after % d seconds' % (end-start))
+root.mainloop()

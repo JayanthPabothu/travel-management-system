@@ -16,7 +16,11 @@ def homepage_screen(user_id, user_name, credit_points):
     homepage = tk.Tk()
     homepage.resizable(height = False, width = False)
     homepage.title('Travel Management System')
-    homepage.geometry('600x400')
+    homepage.geometry('720x420')
+    background = tk.PhotoImage(file='Images/background.png')
+    background_label = tk.Label(homepage,  image=background)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 
     tk.Label(homepage, text="Welcome "+user_name,font=('Helvetica', '25')).grid(column=0, row=0, columnspan=3)
     tk.Label(homepage, text="Options:",font=('Helvetica', '15')).grid(column=0, row=1, columnspan=3)
