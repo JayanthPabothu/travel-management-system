@@ -4,142 +4,160 @@ from functools import partial
 import mysql.connector as mysql
 import datetime as dt
 from tkinter import messagebox
-import homepage
+from tkinter.font import Font
+
+def _from_rgb(rgb):
+    """translates an rgb tuple of int to a tkinter friendly color code
+    """
+    return "#%02x%02x%02x" % rgb
+
+def update_user(user_id):
+
+    def update_data(user_id, update):
+        name1 = entry_name1.get()
+        email1 = entry_email.get()
+        password1 = entry_password.get()
+        DOB_day1 = entry_day.get()
+        DOB_month1 = entry_month.get()
+        DOB_year1 = entry_year.get()
+        street1 = entry_street.get()
+        city1 = entry_city.get()
+        zipcode1 = entry_zipcode.get()
+        phone1 = entry_contact.get()
+        dob = str(DOB_year1)+'-'+str(DOB_month1)+'-'+str(DOB_day1)
 
 
-def update_user(user_id, homepage):
-
-    def update_data(user_id, homepage):
-        name = register_entry_name1.get()
-        email = register_entry_email.get()
-        password = register_entry_password.get()
-        password_again = register_entry_password_again.get()
-        DOB_day = register_entry_day.get()
-        DOB_month = register_entry_month.get()
-        DOB_year = register_entry_year.get()
-        street = register_entry_street.get()
-        city = register_entry_city.get()
-        zipcode = register_entry_zipcode.get()
-        phone = register_entry_contact.get()
-        dob = str(DOB_year)+'-'+str(DOB_month)+'-'+str(DOB_day)
-        print(name, email, password, dob, street, zipcode, phone)
-
-
-        if(name=='' or email=='' or password=='' or street=='' or city=='' or phone==''):
+        if(name1=='' or email1=='' or password1=='' or street1=='' or city1=='' or phone1=='' or DOB_day1=='' or DOB_month1 == '' or DOB_year1 == '' or zipcode1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
         else:
 
-            if(password != password_again):
-                messagebox.showwarning("Invalid request", "Your passwords don't match. Please try again.")
-            else:
-
-                con1 = mysql.connect(
-                host="localhost",
-                user="root",
-                password="testpassword",
-                database="TMS"
-                )
-                cursor1 = con1.cursor()
-                args = cursor1.callproc("UPDATE_CUST_DETAILS", [int(user_id), str(name), str(email), str(password), str(dob), str(street), str(city), int(zipcode), int(phone)])
-                print(args)
-                cursor1.execute("commit")
-                messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
-                cursor1.close()
-                con1.close()
-                update.destroy()
-                homepage.destroy()
-                import main
+            con1 = mysql.connect(
+                    host="localhost",
+                    user="root",
+                    password="testpassword",
+                    database="FMS"
+                    )
+            cursor1 = con1.cursor()
+            args = cursor1.callproc("UPDATE_CUST_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
+            cursor1.execute("commit")
+            messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
+            cursor1.close()
+            con1.close()
+            update.destroy()
+            import login
+            login.main_screen()
 
     update = tk.Tk()
     update.resizable(height = False, width = False)
-    update.title('Travel Management System')
-    update.geometry('800x600')
+    update.title('Flight Management System')
+    update.geometry('720x420')
+    adam = Font(family="ADAM.CG PRO", size=20)
+    # heading = tk.Label(login, text="Travel Management System")
+    # register_head = tk.Label(login, text="Register here", bg='grey',font=('Helvetica', '20'))
+
+    background = tk.PhotoImage(file='Images/edit.png')
+    background_label = tk.Label(update,  image=background)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     con = mysql.connect(
             host="localhost",
             user="root",
             password="testpassword",
-            database="TMS"
+            database="FMS"
         )
     cursor = con.cursor()
     cursor.execute("SELECT * FROM CUSTOMER WHERE CUSTOMER_ID=%s", [int(user_id)])
     records = cursor.fetchmany(size=1)[0]
 
-    tk.Label(update, text="Update details", font=('Helvetica', '25')).grid(column=0, row=0, columnspan=3)
-    tk.Label(update, text="Enter your Name").grid(column=0, row=1)
-    tk.Label(update, text="Enter your Email Id").grid(column=0, row=2)
-    tk.Label(update, text="Enter your Password").grid(column=0, row=3)
-    tk.Label(update, text="Enter your Password again").grid(column=0, row=4)
-    register_DOB = []
-    register_DOB.append(tk.Label(update, text="Enter yor Date of Birth (dd mm yyyy)"))
-    register_DOB.append(tk.Label(update, text="D:"))
-    register_DOB.append(tk.Label(update, text="M:"))
-    register_DOB.append(tk.Label(update, text="Y:"))
+    name = tk.Label(update, text="Name:")
+    name.place(x=500, y=50)
+    name.configure(bg=_from_rgb((128, 159, 186)))
 
-    register_DOB[0].grid(column=0, row=5)
-    register_DOB[1].grid(column=1, row=5)
-    register_DOB[2].grid(column=2, row=5)
-    register_DOB[3].grid(column=3, row=5)
-    tk.Label(update, text="Street").grid(column=0, row=6)
-    tk.Label(update, text="City").grid(column=0, row=7)
-    tk.Label(update, text="Zipcode").grid(column=0, row=8)
-    tk.Label(update, text="Contact number").grid(column=0, row=9)
+    email_id = tk.Label(update, text="Email Id:")
+    email_id.place(x=500, y=80)
+    email_id.configure(bg=_from_rgb((128, 159, 186)))
+
+    password = tk.Label(update, text="Password:")
+    password.place(x=500, y=110)
+    password.configure(bg=_from_rgb((128, 159, 186)))
+
+    register_DOB = tk.Label(update, text="DOB")
+    register_DOB.place(x=500, y=140)
+    register_DOB.configure(bg=_from_rgb((128, 159, 186)))
+
+    day = tk.Label(update, text="D:")
+    day.place(x=565, y=140)
+    day.configure(bg=_from_rgb((128, 159, 186)))
+
+    month = tk.Label(update, text="M:")
+    month.place(x=610, y=140)
+    month.configure(bg=_from_rgb((128, 159, 186)))
+
+    year = tk.Label(update, text="Y:")
+    year.place(x=663, y=140)
+    year.configure(bg=_from_rgb((128, 159, 186)))
+
+    street = tk.Label(update, text="Street:")
+    street.place(x=500, y=170)
+    street.configure(bg=_from_rgb((128, 159, 186)))
+
+    city = tk.Label(update, text="City:")
+    city.place(x=500, y=200)
+    city.configure(bg=_from_rgb((128, 159, 186)))
+
+    zipcode = tk.Label(update, text="Zipcode:")
+    zipcode.place(x=500, y=230)
+    zipcode.configure(bg=_from_rgb((128, 159, 186)))
+
+    contact = tk.Label(update, text="Contact:")
+    contact.place(x=500, y=260)
+    contact.configure(bg=_from_rgb((128, 159, 186)))
 
     # Entries
-    register_entry_name1 = tk.Entry(update)
-    register_entry_name1.insert(0, records[1])
+    entry_name1 = tk.Entry(update)
+    entry_name1.insert(0, records[1])
+    entry_name1.place(x=580, y=50)
 
-    register_entry_email = tk.Entry(update)
-    register_entry_email.insert(0, records[2])
+    entry_email = tk.Entry(update)
+    entry_email.insert(0, records[2])
+    entry_email.place(x=580, y=80)
 
-    register_entry_password = tk.Entry(update)
-    register_entry_password.insert(0, records[3])
+    entry_password = tk.Entry(update)
+    entry_password.insert(0, records[3])
+    entry_password.place(x=580, y=110)
 
-    register_entry_password_again = tk.Entry(update)
-    register_entry_password_again.insert(0, records[3])
+    entry_day = tk.Entry(update,width=4)
+    entry_day.insert(0, records[5].strftime("%d"))
+    entry_day.place(x=580, y=140)
 
-    register_entry_street = tk.Entry(update)
-    register_entry_street.insert(0, records[6])
+    entry_month = tk.Entry(update,width=4)
+    entry_month.insert(0, records[5].strftime("%m"))
+    entry_month.place(x=630, y=140)
 
-    register_entry_city = tk.Entry(update)
-    register_entry_city.insert(0, records[7])
+    entry_year = tk.Entry(update,width=6)
+    entry_year.insert(0, records[5].strftime("%Y"))
+    entry_year.place(x=678, y=140)
 
-    register_entry_zipcode = tk.Entry(update)
-    register_entry_zipcode.insert(0, records[8])
+    entry_street = tk.Entry(update)
+    entry_street.insert(0, records[6])
+    entry_street.place(x=580, y=170)
 
-    register_entry_contact = tk.Entry(update)
-    register_entry_contact.insert(0, records[9])
+    entry_city = tk.Entry(update)
+    entry_city.insert(0, records[7])
+    entry_city.place(x=580, y=200)
 
-    register_entry_day = tk.Entry(update,width=10)
-    register_entry_day.insert(0, records[5].strftime("%d"))
+    entry_zipcode = tk.Entry(update)
+    entry_zipcode.insert(0, records[8])
+    entry_zipcode.place(x=580, y=230)
 
-    register_entry_month = tk.Entry(update,width=10)
-    register_entry_month.insert(0, records[5].strftime("%m"))
+    entry_contact = tk.Entry(update)
+    entry_contact.insert(0, records[9])
+    entry_contact.place(x=580, y=260)
 
-    register_entry_year = tk.Entry(update,width=10)
-    register_entry_year.insert(0, records[5].strftime("%Y"))
 
-    # Placing entries on grid
-    register_entry_name1.grid(column=1, row=1, columnspan=3)
-    register_entry_email.grid(column=1, row=2, columnspan=3)
-    register_entry_password.grid(column=1, row=3, columnspan=3)
-    register_entry_password_again.grid(column=1, row=4, columnspan=3)
-    register_entry_street.grid(column=1, row=6, columnspan=3)
-    register_entry_city.grid(column=1, row=7, columnspan=3)
-    register_entry_zipcode.grid(column=1, row=8, columnspan=3)
-    register_entry_contact.grid(column=1, row=9, columnspan=3)
-    register_entry_day.grid(column=1, row=5)
-    register_entry_month.grid(column=2, row=5)
-    register_entry_year.grid(column=3, row=5)
-
-    tk.ttk.Button(update, text="Update values", command=partial(update_data, user_id, homepage)).grid(column=1, row=10, columnspan=2)
-    # Makes the widgets responsive and centered
-    n_rows = 15
-    n_columns = 4
-    for i in range(n_rows):
-        update.grid_rowconfigure(i,  weight =1)
-    for i in range(n_columns):
-        update.grid_columnconfigure(i,  weight =1)
-
+    update = tk.ttk.Button(update, text="Update values", command=partial(update_data, user_id, update))
+    update.place(x=550, y=300)
 
     update.mainloop()
+
+# update_user(2)
