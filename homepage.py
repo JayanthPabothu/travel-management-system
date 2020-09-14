@@ -14,8 +14,6 @@ def get_update(homepage, id):
     homepage.destroy()
     update_user.update_user(id)
 
-def get_journey():
-    journey.journey_screen()
 
 def logout(homepage):
     homepage.destroy()
@@ -23,6 +21,13 @@ def logout(homepage):
     login.main_screen()
 
 def homepage_screen(user_id, user_email, user_name, credit_points):
+
+
+    def get_journey():
+        homepage.destroy()    
+        journey.journey_screen(user_id)
+
+
     homepage = tk.Tk()
     homepage.resizable(height = False, width = False)
     homepage.title('Flight Management System')

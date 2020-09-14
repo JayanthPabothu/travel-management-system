@@ -5,12 +5,48 @@ import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
 
-def pay_screen():
+def pay_screen(flight_id, user_id, journey_id):
+
+    def book_ticket():
+        c1 = c.get()
+        price = 0
+        seat_num = 0
+        seat_type = ""
+        print(c1)
+        print(seats_p.get())
+        if (c1 == 1 and seats_fc.get() != ""):
+            seat_num = seats_fc.get()
+            seat_type = "FIRSTCLASS"
+            price = price_fc_val
+
+        elif (c1 == 2 and seats_e.get() != ""):
+            seat_num = seats_e.get()
+            seat_type = "ECONOMY"
+            price = price_e_val
+
+        elif (c1 == 3 and seats_b.get() != ""):
+            seat_num = seats_b.get()
+            seat_type = "BUSINESS"
+            price = price_b_val
+
+        elif (c1 == 4 and seats_p.get() != ""):
+            seat_num = seats_p.get()
+            seat_type = "PREMIUM"
+            price = price_p_val
+            print(seat_type)
+
+        else:
+            messagebox.showwarning("Invalid request", "Please choose a valid seat.")
+
+        print(seat_type)
+        cursor.callproc("INSERT_FLIGHT_BOOKING", [journey_id, user_id, price, seat_type, seat_num])
+        cursor.execute("commit")
+        messagebox.showinfo("Status", "Your ticket has been successfully booked!")
 
     con = mysql.connect(
         host="localhost",
         user="root",
-        password="1234",
+        password="testpassword",
         database="FMS",
         port = 3306
         )
@@ -27,34 +63,34 @@ def pay_screen():
     cursor.execute("SELECT * FROM PRICE_FACTOR;")
     factors = cursor.fetchall()[0]
 
-    
-    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [6, 'FIRSTCLASS'])
+
+    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [journey_id, 'FIRSTCLASS'])
     fc = cursor.fetchall()
     if(len(fc)==0):
         fc=[0]
     else:
         fc = [int(i[0]) for i in fc]
     print(fc)
-    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [6, 'ECONOMY'])
+    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [journey_id, 'ECONOMY'])
     e = cursor.fetchall()
     if(len(e)==0):
         e=[0]
     else:
         e = [int(i[0]) for i in e]
-    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [6, 'BUSINESS'])
+    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [journey_id, 'BUSINESS'])
     b = cursor.fetchall()
     if(len(b)==0):
         b=[0]
     else:
         b = [int(i[0]) for i in b]
-    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [6, 'PREMIUM'])
+    cursor.execute("SELECT SEAT_NO FROM BOOKS_FLIGHT WHERE JOURNEY_ID=%s AND SEAT_TYPE=%s;", [journey_id, 'PREMIUM'])
     p = cursor.fetchall()
     if(len(p)==0):
         p=[0]
     else:
         p = [int(i[0]) for i in p]
 
-    pay_window = tk.Tk()
+    pay_window = tk.Toplevel()
     pay_window.resizable(height = False, width = False)
     pay_window.title('Flight Management System')
     pay_window.geometry('500x320')
@@ -102,7 +138,7 @@ def pay_screen():
     price.place(x=0 , y=150)
     #price.configure(bg=_from_rgb((133, 237, 157)))
 
-    
+
     price_fc_val = str(base_price*factors[0])
     price_fc = tk.Label(pay_window, text=price_fc_val)
     price_fc.place(x=65 , y=150)
@@ -123,8 +159,8 @@ def pay_screen():
     price_p.place(x=395 , y=150)
     #price_p.configure(bg=_from_rgb((133, 237, 157)))
 
-    tk.ttk.Button(pay_window, text="Pay").place(x=210, y=220)
+    tk.ttk.Button(pay_window, text="Pay", command=book_ticket).place(x=210, y=220)
 
     pay_window.mainloop()
 
-pay_screen()
+# pay_screen('AI 0946', 1, 1)

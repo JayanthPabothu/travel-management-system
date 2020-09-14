@@ -2,9 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 import datetime
 import booking
+from functools import partial
 import mysql.connector as mysql
 from tkinter import messagebox
 from tkinter.font import Font
+
 
 
 def _from_rgb(rgb):
@@ -13,7 +15,7 @@ def _from_rgb(rgb):
     return "#%02x%02x%02x" % rgb
 
 
-def journey_screen():
+def journey_screen(user_id):
 
 
     def search_booking():
@@ -21,7 +23,9 @@ def journey_screen():
         dest = dest_city_options.get()
         #mode = mode_of_trans_options.get()
         date = date_options.get()
-        booking.booking_run(source, dest, mode, date)
+        x = datetime.datetime.strptime(date, "%d-%b-%Y")
+        date = str(x.strftime("%Y"))+'-'+str(x.strftime("%m"))+'-'+str(x.strftime("%d"))
+        booking.booking_screen(source, dest, date, user_id, journey)
 
 
     journey = tk.Tk()
@@ -70,7 +74,7 @@ def journey_screen():
                             ]
 
 
-    dest_city_options.current(1)
+    dest_city_options.current(0)
     cursor.close()
     con.close()
 
@@ -119,4 +123,4 @@ def journey_screen():
 
     journey.mainloop()
 #
-journey_screen()
+# journey_screen(1)
