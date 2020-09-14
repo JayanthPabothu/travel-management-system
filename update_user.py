@@ -38,14 +38,20 @@ def update_user(user_id):
                     database="FMS"
                     )
             cursor1 = con1.cursor()
-            args = cursor1.callproc("UPDATE_CUST_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
-            cursor1.execute("commit")
-            messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
+            cursor1.execute("SELECT EXISTS(SELECT EMAIL_ID FROM CUSTOMER WHERE CUSTOMER_ID<>%s AND EMAIL_ID=%s", [str(user_id), str(email1)])
+            check = cursor1.fetchmany(size=1)
+            if check[0][0] = 1:
+                messagebox.showwarning("Invalid request", "Email ID has already been taken. Please select another email id.")
+            else:
+                args = cursor1.callproc("UPDATE_CUST_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
+                cursor1.execute("commit")
+                messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
+                update.destroy()
+                import login
+                login.main_screen()
             cursor1.close()
             con1.close()
-            update.destroy()
-            import login
-            login.main_screen()
+
 
     update = tk.Tk()
     update.resizable(height = False, width = False)
