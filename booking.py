@@ -1,15 +1,22 @@
 import tkinter as tk
-from tkinter import ttk
-def booking_run(source, dest, mode, date):
+from tkinter import *
+def booking_screen():
     booking = tk.Tk()
     booking.resizable(height = False, width = False)
     booking.title('Travel Management System')
-    booking.geometry('720x500')
+    booking.geometry('720x420')
+        # create a vertical scrollbar-no need
+        # to write orient as it is by
+        # default vertical
+    #v = ScrolledFrame(booking)
 
+        # attach Scrollbar to root window on
+        # the side
+    #v.pack(expand=True, fill='both')
     heading = tk.Label(booking, text="Search results", font=('Helvetica', '25'))
 
     result_box = []
-    no_of_results = 1
+    no_of_results = 15
     ini_col = 0
     ini_row = 1
     for i in range(0, no_of_results):
@@ -47,3 +54,4 @@ def booking_run(source, dest, mode, date):
     heading.grid(column=1, row=0, columnspan=2)
 
     booking.mainloop()
+# booking_screen()
