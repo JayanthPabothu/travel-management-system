@@ -19,7 +19,7 @@ def journey_screen():
     def search_booking():
         source = start_city_options.get()
         dest = dest_city_options.get()
-        mode = mode_of_trans_options.get()
+        #mode = mode_of_trans_options.get()
         date = date_options.get()
         booking.booking_run(source, dest, mode, date)
 
@@ -49,7 +49,7 @@ def journey_screen():
             host="localhost",
             user="root",
             password="testpassword",
-            database="FMS"
+            database="FMS",
         )
     cursor = con.cursor()
     cursor.execute("SELECT DISTINCT START_CITY FROM ROUTE")
