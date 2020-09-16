@@ -24,7 +24,7 @@ def homepage_screen(user_id, user_email, user_name, credit_points):
 
 
     def get_journey():
-        homepage.destroy()    
+        homepage.destroy()
         journey.journey_screen(user_id)
 
 
@@ -32,9 +32,9 @@ def homepage_screen(user_id, user_email, user_name, credit_points):
     homepage.resizable(height = False, width = False)
     homepage.title('Flight Management System')
     homepage.geometry('720x420')
-    background = tk.PhotoImage(file='Images/homepage.png')
-    background_label = tk.Label(homepage,  image=background)
-    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    background_h = tk.PhotoImage(file='Images/homepage.png')
+    background_label_h = tk.Label(homepage,  image=background_h)
+    background_label_h.place(x=0, y=0, relwidth=1, relheight=1)
     adam = Font(family="ADAM.CG PRO", size=20)
 
 

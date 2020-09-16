@@ -12,7 +12,7 @@ gender_mapper = {1: 'M', 2: 'F', 3: 'T'}
 con = mysql.connect(
         host="localhost",
         user="root",
-        password="1234",
+        password="testpassword",
         database="FMS",
         port=3306
     )

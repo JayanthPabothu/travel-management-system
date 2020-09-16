@@ -32,9 +32,9 @@ def journey_screen(user_id):
     journey.resizable(height = False, width = False)
     journey.title('Travel Management System')
     journey.geometry('720x420')
-    background = tk.PhotoImage(file='Images/Travel.png')
-    background_label = tk.Label(journey,  image=background)
-    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    background_j = tk.PhotoImage(file='Images/Travel.png')
+    background_label_j = tk.Label(journey,  image=background_j)
+    background_label_j.place(x=0, y=0, relwidth=1, relheight=1)
     adam = Font(family="ADAM.CG PRO", size=20)
 
     heading = tk.Label(journey, text="Select your Journey", font=('Helvetica', '25'))

@@ -4,6 +4,7 @@ from tkinter.font import Font
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
+import homepage
 
 def pay_screen(flight_id, user_id, journey_id):
 
@@ -12,8 +13,7 @@ def pay_screen(flight_id, user_id, journey_id):
         price = 0
         seat_num = 0
         seat_type = ""
-        print(c1)
-        print(seats_p.get())
+
         if (c1 == 1 and seats_fc.get() != ""):
             seat_num = seats_fc.get()
             seat_type = "FIRSTCLASS"
@@ -33,15 +33,25 @@ def pay_screen(flight_id, user_id, journey_id):
             seat_num = seats_p.get()
             seat_type = "PREMIUM"
             price = price_p_val
-            print(seat_type)
+
 
         else:
             messagebox.showwarning("Invalid request", "Please choose a valid seat.")
+            return None
 
-        print(seat_type)
+
         cursor.callproc("INSERT_FLIGHT_BOOKING", [journey_id, user_id, price, seat_type, seat_num])
         cursor.execute("commit")
+
+        cursor.execute("SELECT CUSTOMER_NAME, CREDIT_POINTS, EMAIL_ID FROM CUSTOMER WHERE CUSTOMER_ID=%s;", [user_id])
+        records = cursor.fetchall()
+        user_name = records[0][0]
+        credit_points = records[0][1]
+        email = records[0][2]
+
         messagebox.showinfo("Status", "Your ticket has been successfully booked!")
+        pay_window.destroy()
+        homepage.homepage_screen(user_id, email, user_name, credit_points)
 
     con = mysql.connect(
         host="localhost",
@@ -90,10 +100,13 @@ def pay_screen(flight_id, user_id, journey_id):
     else:
         p = [int(i[0]) for i in p]
 
-    pay_window = tk.Toplevel()
+    pay_window = tk.Tk()
     pay_window.resizable(height = False, width = False)
     pay_window.title('Flight Management System')
     pay_window.geometry('500x320')
+    background2 = tk.PhotoImage(file='Images/rupeee.png')
+    background_label1 = tk.Label(pay_window,  image=background2)
+    background_label1.place(x=0, y=0, relwidth=1, relheight=1)
 
     c = tk.IntVar()
 
@@ -102,10 +115,10 @@ def pay_screen(flight_id, user_id, journey_id):
     class3 = tk.Radiobutton(pay_window, text="Business", variable=c, value=3)
     class4 = tk.Radiobutton(pay_window, text="Premium", variable=c, value=4)
 
-    class1.place(x=50, y=70)
-    class2.place(x=160, y=70)
-    class3.place(x=270, y=70)
-    class4.place(x=380, y=70)
+    class1.place(x=50, y=150)
+    class2.place(x=160, y=150)
+    class3.place(x=270, y=150)
+    class4.place(x=380, y=150)
 
     #class1.configure(bg=_from_rgb((133, 237, 157)))
     #class2.configure(bg=_from_rgb((133, 237, 157)))
@@ -115,51 +128,51 @@ def pay_screen(flight_id, user_id, journey_id):
     seatnofc = tk.StringVar()
     seats_fc = ttk.Combobox(pay_window, height=5, width = 10, textvariable = seatnofc)
     seats_fc['values'] = list(set(fc_seats)-set(fc))
-    seats_fc.place(x=50, y=110)
+    seats_fc.place(x=50, y=190)
 
     seatnoe = tk.StringVar()
     seats_e = ttk.Combobox(pay_window, height=5, width = 10, textvariable = seatnoe)
     seats_e['values'] = list(set(e_seats)-set(e))
-    seats_e.place(x=160, y=110)
+    seats_e.place(x=160, y=190)
 
     seatnob = tk.StringVar()
     seats_b = ttk.Combobox(pay_window, height=5, width = 10, textvariable = seatnob)
     seats_b['values'] = list(set(b_seats)-set(b))
-    seats_b.place(x=270, y=110)
+    seats_b.place(x=270, y=190)
 
 
     seatnop = tk.StringVar()
     seats_p = ttk.Combobox(pay_window, height=5, width = 10, textvariable = seatnop)
     seats_p['values'] = list(set(p_seats)-set(p))
-    seats_p.place(x=380, y=110)
+    seats_p.place(x=380, y=190)
 
     price = "Price:"
     price = tk.Label(pay_window, text=price)
-    price.place(x=0 , y=150)
+    price.place(x=0 , y=230)
     #price.configure(bg=_from_rgb((133, 237, 157)))
 
 
     price_fc_val = str(base_price*factors[0])
     price_fc = tk.Label(pay_window, text=price_fc_val)
-    price_fc.place(x=65 , y=150)
+    price_fc.place(x=65 , y=230)
     #price_fc.configure(bg=_from_rgb((133, 237, 157)))
 
     price_e_val = str(base_price*factors[1])
     price_e = tk.Label(pay_window, text=price_e_val)
-    price_e.place(x=175 , y=150)
+    price_e.place(x=175 , y=230)
     #price_e.configure(bg=_from_rgb((133, 237, 157)))
 
     price_b_val = str(base_price*factors[2])
     price_b = tk.Label(pay_window, text=price_b_val)
-    price_b.place(x=285 , y=150)
+    price_b.place(x=285 , y=230)
     #price_b.configure(bg=_from_rgb((133, 237, 157)))
 
     price_p_val = str(base_price*factors[3])
     price_p= tk.Label(pay_window, text=price_p_val)
-    price_p.place(x=395 , y=150)
+    price_p.place(x=395 , y=230)
     #price_p.configure(bg=_from_rgb((133, 237, 157)))
 
-    tk.ttk.Button(pay_window, text="Pay", command=book_ticket).place(x=210, y=220)
+    tk.ttk.Button(pay_window, text="Pay", command=book_ticket).place(x=210, y=270)
 
     pay_window.mainloop()
 

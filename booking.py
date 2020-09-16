@@ -21,6 +21,7 @@ def booking_screen(source, dest, date, user_id, journey):
 
 
     def get_payment(flight_id, user_id, journey_id):
+        root.destroy()
         pay.pay_screen(flight_id, user_id, journey_id)
 
     con = mysql.connect(
@@ -132,32 +133,6 @@ def booking_screen(source, dest, date, user_id, journey):
                 tk.Label(scrollable_frame, text=data_dict['flight_id'][i], font=font10).grid(column=2, row=3+(6*i), sticky="N")
 
                 tk.ttk.Button(scrollable_frame, text="Book now", command=partial(get_payment, data_dict['flight_id'][i], user_id, new_dict[data_dict['flight_id'][i]])).grid(column=2, row=4+(6*i), pady=(10, 70))
-#
-    # for i in range(0, no_of_results):
-    #
-    #     tk.Label(scrollable_frame, text="Air India").grid(column=0, row=(1+(i*4)))
-    #     tk.Label(scrollable_frame, text="Journey Begins").grid(column=0, row=2+(i*4))
-    #     tk.Label(scrollable_frame, text="Journey Ends").grid(column=2, row=2+(i*4))
-    #     tk.Label(scrollable_frame, text="Duration").grid(column=1, row=2+(i*4))
-    #     tk.Label(scrollable_frame, text="Cost").grid(column=3, row=2+(i*4))
-    #     tk.Label(scrollable_frame, text="00:00").grid(column=0, row=3+(i*4))
-    #     tk.Label(scrollable_frame, text="12:10").grid(column=2, row=3+(i*4))
-    #     tk.Label(scrollable_frame, text="12h 10m").grid(column=1, row=3+(i*4))
-    #     tk.Label(scrollable_frame, text="Rs.5000").grid(column=3, row=3+(i*4))
-    #
-    #     tk.Label(scrollable_frame, text="Seats Available: 69").grid(column=1, row=4+(i*4))
-    #     n_seat_type = tk.StringVar()
-    #     seat_type = ttk.Combobox(scrollable_frame, width = 25, textvariable = n_seat_type)
-    #     seat_type['values'] =             (
-    #                               '------Select seat type------',
-    #                               'Economy',
-    #                               'Business',
-    #                             )
-    #     seat_type.current(0)
-    #
-    #     submit = tk.ttk.Button(scrollable_frame, text="Select")
-    #     seat_type.grid(column=0, row=4+(i*4))
-    #     submit.grid(column=2, row=4+(i*4))
 
             n_rows = 30
             n_columns = 10

@@ -20,6 +20,10 @@ def main_screen():
         login.destroy()
         import register
 
+    def get_admin_register():
+        login.destroy()
+        import admin_register
+
     def login_user():
         email = email_entry.get()
         password = password_entry.get()
@@ -66,10 +70,10 @@ def main_screen():
     # heading = tk.Label(login, text="Travel Management System")
     # register_head = tk.Label(login, text="Register here", bg='grey',font=('Helvetica', '20'))
 
-    background = tk.PhotoImage(file='Images/background.png')
+    background_l = tk.PhotoImage(file='Images/background.png')
     description = tk.Label(login, text="\n\n\n\n\n\n")
-    background_label = tk.Label(login,  image=background)
-    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    background_label_l = tk.Label(login,  image=background_l)
+    background_label_l.place(x=0, y=0, relwidth=1, relheight=1)
 
     login_head = tk.Label(login, text="Login here",font=adam)
     login_head.place(x=540, y=75)
@@ -94,6 +98,9 @@ def main_screen():
     message.place(x=625, y=230)
     message.configure(bg=_from_rgb((133, 237, 157)))
     tk.ttk.Button(login, text="Signup", command=get_register).place(x=600, y=260)
+
+    tk.ttk.Button(login, text="Signup as Admin", command=get_admin_register).place(x=20, y=380)
+    tk.ttk.Button(login, text="About Us").place(x=150, y=380)
 
 
     login.mainloop()

@@ -6,7 +6,7 @@ from tkinter import messagebox
 import admin
 from tkinter.font import Font
 
-
+gender_mapper = {1: 'M', 2: 'F', 3: 'T'}
 con = mysql.connect(
         host="localhost",
         user="root",
@@ -21,7 +21,7 @@ def register_user():
     DOB_day = register_entry_day.get()
     DOB_month = register_entry_month.get()
     DOB_year = register_entry_year.get()
-    gender = g.get()
+    gender = gender_mapper[g.get()]
     street = register_entry_street.get()
     city = register_entry_city.get()
     zipcode = register_entry_zipcode.get()
