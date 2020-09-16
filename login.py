@@ -13,12 +13,12 @@ def _from_rgb(rgb):
     """
     return "#%02x%02x%02x" % rgb
 
-def get_register():
-    login.destroy()
-    import register
 
 def main_screen():
 
+    def get_register():
+        login.destroy()
+        import register
 
     def login_user():
         email = email_entry.get()
