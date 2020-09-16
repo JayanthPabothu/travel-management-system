@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
-import booking
+import booking, homepage
 from functools import partial
 import mysql.connector as mysql
 from tkinter import messagebox
@@ -18,6 +18,18 @@ def _from_rgb(rgb):
 def journey_screen(user_id):
 
 
+
+    def on_closing():
+
+        cursor.execute("SELECT CUSTOMER_NAME, CREDIT_POINTS, EMAIL_ID FROM CUSTOMER WHERE CUSTOMER_ID=%s;", [user_id])
+        records = cursor.fetchall()
+        user_name = records[0][0]
+        credit_points = records[0][1]
+        email = records[0][2]
+        journey.destroy()
+        homepage.homepage_screen(user_id, email, user_name, credit_points)
+
+
     def search_booking():
         source = start_city_options.get()
         dest = dest_city_options.get()
@@ -32,9 +44,9 @@ def journey_screen(user_id):
     journey.resizable(height = False, width = False)
     journey.title('Travel Management System')
     journey.geometry('720x420')
-    background = tk.PhotoImage(file='Images/Travel.png')
-    background_label = tk.Label(journey,  image=background)
-    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    background_j = tk.PhotoImage(file='Images/Travel.png')
+    background_label_j = tk.Label(journey,  image=background_j)
+    background_label_j.place(x=0, y=0, relwidth=1, relheight=1)
     adam = Font(family="ADAM.CG PRO", size=20)
 
     heading = tk.Label(journey, text="Select your Journey", font=('Helvetica', '25'))
@@ -75,8 +87,6 @@ def journey_screen(user_id):
 
 
     dest_city_options.current(0)
-    cursor.close()
-    con.close()
 
     x = datetime.datetime.now()
     list_1 = []
@@ -120,6 +130,8 @@ def journey_screen(user_id):
         journey.grid_rowconfigure(i,  weight =1)
     for i in range(n_columns):
         journey.grid_columnconfigure(i,  weight =1)
+
+    journey.protocol("WM_DELETE_WINDOW", on_closing)
 
     journey.mainloop()
 #

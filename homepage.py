@@ -3,7 +3,7 @@ from tkinter import ttk
 import journey
 from functools import partial
 from tkinter.font import Font
-import update_user
+import update_user, booking_history
 
 def _from_rgb(rgb):
     """translates an rgb tuple of int to a tkinter friendly color code
@@ -22,9 +22,13 @@ def logout(homepage):
 
 def homepage_screen(user_id, user_email, user_name, credit_points):
 
+    def history():
+        homepage.destroy()
+        booking_history.history_screen(user_id)
+
 
     def get_journey():
-        homepage.destroy()    
+        homepage.destroy()
         journey.journey_screen(user_id)
 
 
@@ -32,9 +36,9 @@ def homepage_screen(user_id, user_email, user_name, credit_points):
     homepage.resizable(height = False, width = False)
     homepage.title('Flight Management System')
     homepage.geometry('720x420')
-    background = tk.PhotoImage(file='Images/homepage.png')
-    background_label = tk.Label(homepage,  image=background)
-    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    background_h = tk.PhotoImage(file='Images/homepage.png')
+    background_label_h = tk.Label(homepage,  image=background_h)
+    background_label_h.place(x=0, y=0, relwidth=1, relheight=1)
     adam = Font(family="ADAM.CG PRO", size=20)
 
 
@@ -52,7 +56,7 @@ def homepage_screen(user_id, user_email, user_name, credit_points):
     book.place(x=100, y=200)
     book.config(width=17, height=2)
 
-    history = tk.Button(homepage, text="Get Booking History")
+    history = tk.Button(homepage, text="Get Booking History", command=history)
     history.place(x=500, y=200)
     history.config(width=17, height=2)
     #tk.ttk.Button(homepage, text="Edit Details", command=partial(update_user.update_user, user_id, homepage)).grid(column=0, columnspan=3,row=4)

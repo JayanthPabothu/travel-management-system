@@ -3,16 +3,20 @@ from tkinter.ttk import *
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
-import admin
+import admin, login
 from tkinter.font import Font
 
-
+gender_mapper = {1: 'M', 2: 'F', 3: 'T'}
 con = mysql.connect(
         host="localhost",
         user="root",
         password="testpassword",
         database="FMS"
     )
+
+def on_closing():
+    register.destroy()
+    login.main_screen()
 
 def register_user():
     name = register_entry_name.get()
@@ -21,7 +25,7 @@ def register_user():
     DOB_day = register_entry_day.get()
     DOB_month = register_entry_month.get()
     DOB_year = register_entry_year.get()
-    gender = g.get()
+    gender = gender_mapper[g.get()]
     street = register_entry_street.get()
     city = register_entry_city.get()
     zipcode = register_entry_zipcode.get()
@@ -165,6 +169,7 @@ gender3.configure(bg=_from_rgb((133, 237, 157)))
 
 tk.ttk.Button(register, text="Register", command=register_user).place(x=70, y=330)
 
+register.protocol("WM_DELETE_WINDOW", on_closing)
 
 
 register.mainloop()
