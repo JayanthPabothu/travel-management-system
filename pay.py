@@ -4,9 +4,14 @@ from tkinter.font import Font
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
-import homepage
+import homepage, login
 
 def pay_screen(flight_id, user_id, journey_id):
+
+    def on_closing():
+        if messagebox.askokcancel("Quit", "Are you sure? \nYour ticket will not be booked if you quit."):
+            pay_window.destroy()
+            login.main_screen()
 
     def book_ticket():
         c1 = c.get()
@@ -173,6 +178,8 @@ def pay_screen(flight_id, user_id, journey_id):
     #price_p.configure(bg=_from_rgb((133, 237, 157)))
 
     tk.ttk.Button(pay_window, text="Pay", command=book_ticket).place(x=210, y=270)
+
+    pay_window.protocol("WM_DELETE_WINDOW", on_closing)
 
     pay_window.mainloop()
 

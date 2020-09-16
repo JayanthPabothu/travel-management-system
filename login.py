@@ -3,8 +3,7 @@ from tkinter.ttk import *
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
-import homepage
-import admin
+import homepage, about
 from tkinter.font import Font
 
 
@@ -15,6 +14,11 @@ def _from_rgb(rgb):
 
 
 def main_screen():
+
+    def get_aboutus():
+        login.destroy()
+        about.about_screen()
+
 
     def get_register():
         login.destroy()
@@ -100,7 +104,7 @@ def main_screen():
     tk.ttk.Button(login, text="Signup", command=get_register).place(x=600, y=260)
 
     tk.ttk.Button(login, text="Signup as Admin", command=get_admin_register).place(x=20, y=380)
-    tk.ttk.Button(login, text="About Us").place(x=150, y=380)
+    tk.ttk.Button(login, text="About Us", command=get_aboutus).place(x=150, y=380)
 
 
     login.mainloop()

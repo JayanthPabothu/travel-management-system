@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import datetime
-import booking
+import booking, homepage
 from functools import partial
 import mysql.connector as mysql
 from tkinter import messagebox
@@ -16,6 +16,18 @@ def _from_rgb(rgb):
 
 
 def journey_screen(user_id):
+
+
+
+    def on_closing():
+
+        cursor.execute("SELECT CUSTOMER_NAME, CREDIT_POINTS, EMAIL_ID FROM CUSTOMER WHERE CUSTOMER_ID=%s;", [user_id])
+        records = cursor.fetchall()
+        user_name = records[0][0]
+        credit_points = records[0][1]
+        email = records[0][2]
+        journey.destroy()
+        homepage.homepage_screen(user_id, email, user_name, credit_points)
 
 
     def search_booking():
@@ -75,8 +87,6 @@ def journey_screen(user_id):
 
 
     dest_city_options.current(0)
-    cursor.close()
-    con.close()
 
     x = datetime.datetime.now()
     list_1 = []
@@ -120,6 +130,8 @@ def journey_screen(user_id):
         journey.grid_rowconfigure(i,  weight =1)
     for i in range(n_columns):
         journey.grid_columnconfigure(i,  weight =1)
+
+    journey.protocol("WM_DELETE_WINDOW", on_closing)
 
     journey.mainloop()
 #

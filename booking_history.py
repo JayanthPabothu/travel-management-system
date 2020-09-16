@@ -5,13 +5,26 @@ import mysql.connector as mysql
 from mysql.connector import Error
 from functools import partial
 from tkinter import messagebox
+import datetime
+import homepage
 
 def history_screen(cust_id):
+
+
+    def on_closing():
+        root.destroy()
+        cursor.execute("SELECT CUSTOMER_NAME, CREDIT_POINTS, EMAIL_ID FROM CUSTOMER WHERE CUSTOMER_ID=%s;", [cust_id])
+        records = cursor.fetchall()
+        user_name = records[0][0]
+        credit_points = records[0][1]
+        email = records[0][2]
+
+        homepage.homepage_screen(cust_id, email, user_name, credit_points)
 
     con = mysql.connect(
             host="localhost",
             user="root",
-            password="1234",
+            password="testpassword",
             database="FMS",
             port = 3306
             )
@@ -27,13 +40,13 @@ def history_screen(cust_id):
                     'dest':[]
                 }
     cursor = con.cursor()
-    cursor.execute("SELECT JOURNEY_ID, DATE_OF_BOOKING, PRICE, SEAT_TYPE, SEAT_NO FROM BOOKS_FLIGHT WHERE CUSTOMER_ID=%s;", [cust_id])
+    cursor.execute("SELECT JOURNEY_ID, DATE_OF_BOOKING, PRICE, SEAT_TYPE, SEAT_NO FROM BOOKS_FLIGHT WHERE CUSTOMER_ID=%s ORDER BY DATE_OF_BOOKING;", [cust_id])
     res = cursor.fetchall()
     if len(res)==0:
         messagebox.showwarning("Record not found!", "No bookings done yet.")
     else:
         dict_data['journey_ids']=[str(id[0]) for id in res]
-        dict_data['date_book']=[str(id[1]) for id in res]
+        dict_data['date_book']=[str(id[1].strftime("%d-%m-%Y")) for id in res]
         dict_data['price']=[str(id[2]) for id in res]
         dict_data['seat_type']=[str(id[3]) for id in res]
         dict_data['seat_num']=[str(id[4]) for id in res]
@@ -46,10 +59,10 @@ def history_screen(cust_id):
             cursor.execute("SELECT JOURNEY_DATE FROM JOURNEY_FLIGHT WHERE JOURNEY_ID=%s;", [journey])
             jdate=cursor.fetchmany(size=1)
             dict_data["date_journey"].append(jdate[0][0])
-        
+
         print(dict_data)
 
-        
+
         root = tk.Tk()
         root.title('Flight Management System')
         root.geometry('720x420')
@@ -67,7 +80,8 @@ def history_screen(cust_id):
         )
 
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        
+        canvas.configure(yscrollcommand=scrollbar.set)
+
         font10 = Font(family='Arial', size=10)
         font15 = Font(family='Arial', size=15)
         font20 = Font(family='Arial', size=20)
@@ -83,13 +97,13 @@ def history_screen(cust_id):
             tk.Label(scrollable_frame, text=dict_data['dest'][i], font=font15).grid(column=4, row=2+(6*i))
             tk.Label(scrollable_frame, text=dict_data['date_journey'][i]).grid(column=2, row=1+(6*i), padx=(0, 50))
 
-            
+
             tk.Label(scrollable_frame, text="---------------->", font=font20).grid(column=2, row=2+(6*i), padx=(0, 50))
             tk.Label(scrollable_frame, text="Seat:   "+dict_data['seat_type'][i]+"   "+dict_data['seat_num'][i], font=font10).grid(column=2, row=3+(6*i), padx=(0, 50), pady=(0, 30))
             tk.Label(scrollable_frame, text="Price: "+dict_data['price'][i], font=font10).grid(column=0, row=3+(6*i), pady=(0, 30))
             #tk.Label(scrollable_frame, text=dict_data['seat_num'][i]).grid(column=4, row=0+(6*i), padx=70)
-            
-            
+
+
             # tk.Label(scrollable_frame, text=dict_data['dest_airport'], font=font10).grid(column=4, row=3+(6*i))
             # tk.Label(scrollable_frame, text=dict_data['flight_id'][i], font=font10).grid(column=2, row=3+(6*i), sticky="N")
 
@@ -104,6 +118,7 @@ def history_screen(cust_id):
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        root.mainloop()
-history_screen(1)
+        root.protocol("WM_DELETE_WINDOW", on_closing)
 
+        root.mainloop()
+# history_screen(1)

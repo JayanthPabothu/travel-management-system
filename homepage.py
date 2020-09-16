@@ -3,7 +3,7 @@ from tkinter import ttk
 import journey
 from functools import partial
 from tkinter.font import Font
-import update_user
+import update_user, booking_history
 
 def _from_rgb(rgb):
     """translates an rgb tuple of int to a tkinter friendly color code
@@ -21,6 +21,10 @@ def logout(homepage):
     login.main_screen()
 
 def homepage_screen(user_id, user_email, user_name, credit_points):
+
+    def history():
+        homepage.destroy()
+        booking_history.history_screen(user_id)
 
 
     def get_journey():
@@ -52,7 +56,7 @@ def homepage_screen(user_id, user_email, user_name, credit_points):
     book.place(x=100, y=200)
     book.config(width=17, height=2)
 
-    history = tk.Button(homepage, text="Get Booking History")
+    history = tk.Button(homepage, text="Get Booking History", command=history)
     history.place(x=500, y=200)
     history.config(width=17, height=2)
     #tk.ttk.Button(homepage, text="Edit Details", command=partial(update_user.update_user, user_id, homepage)).grid(column=0, columnspan=3,row=4)

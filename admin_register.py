@@ -3,11 +3,17 @@ from tkinter.ttk import *
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
-import admin
+import admin, login
 from tkinter.font import Font
 
 
 gender_mapper = {1: 'M', 2: 'F', 3: 'T'}
+
+
+def on_closing():
+    admin_register.destroy()
+    login.main_screen()
+
 
 con = mysql.connect(
         host="localhost",
@@ -177,6 +183,6 @@ gender3.configure(bg=_from_rgb((133, 237, 157)))
 
 tk.ttk.Button(admin_register, text="Register", command=register_user).place(x=70, y=360)
 
-
+admin_register.protocol("WM_DELETE_WINDOW", on_closing)
 
 admin_register.mainloop()

@@ -6,6 +6,7 @@ from mysql.connector import Error
 from functools import partial
 from tkinter import messagebox
 import pay
+import journey as j
 
 def convert_timedelta(duration, code):
     seconds = duration.seconds
@@ -19,6 +20,10 @@ def convert_timedelta(duration, code):
 
 def booking_screen(source, dest, date, user_id, journey):
 
+
+    def on_closing():
+        root.destroy()
+        j.journey_screen(user_id)
 
     def get_payment(flight_id, user_id, journey_id):
         root.destroy()
@@ -35,6 +40,9 @@ def booking_screen(source, dest, date, user_id, journey):
     routes = cursor.fetchall()
     if len(routes)==0:
         messagebox.showwarning("Record not found!", "No flights available for the given journey details.")
+        root.destroy()
+        j.journey_screen(user_id)
+
 
 
     else:
@@ -144,5 +152,7 @@ def booking_screen(source, dest, date, user_id, journey):
             container.pack()
             canvas.pack(side="left", fill="both", expand=True)
             scrollbar.pack(side="right", fill="y")
+
+            root.protocol("WM_DELETE_WINDOW", on_closing)
 
             root.mainloop()
