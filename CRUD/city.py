@@ -25,16 +25,12 @@ def crud_city():
 
     def get_selected_row(event):
         global old_city_code
-        print(city_list.curselection())
-        if(len(city_list.curselection()) != 0):
-
-            index = city_list.curselection()[0]
+        index = city_list.curselection()
+        if (len(index) != 0):
             selected_tuple = city_list.get(index)
-            print(selected_tuple)
             city_code.delete(0, tk.END)
             city_code.insert(tk.END,selected_tuple[0])
             old_city_code= city_code.get()
-            print(old_city_code)
             city.delete(0, tk.END)
             city.insert(tk.END, selected_tuple[1])
             zip_code.delete(0, tk.END)
@@ -62,6 +58,12 @@ def crud_city():
             else:
                 cursor.callproc("INSERT_CITY_DETAILS", [city_code1, city1, int(zip_code1), airport1])
                 cursor.execute("commit")
+                city_code.delete(0, tk.END)
+                city.delete(0, tk.END)
+                zip_code.delete(0, tk.END)
+                airport.delete(0, tk.END)
+                city_list.delete(0, tk.END)
+                view_city()
                 messagebox.showinfo("Request successful", "Successfully added city.")
 
     def update_city():
@@ -69,35 +71,69 @@ def crud_city():
         city_code1 = city_code.get()
         zip_code1 = zip_code.get()
         airport1 = airport.get()
-        print(old_city_code)
 
         if(city1 == '' or city_code1 == '' or zip_code1 == '' or airport1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have fetched all the fields.")
         elif (len(str(zip_code1)) != 6):
             messagebox.showwarning("Invalid request", "Enter a valid Zip Code.")
         else:
-            cursor.callproc("UPDATE_CITY_DETAILS", [old_city_code, city_code1, city1, zip_code1, airport1])
-            cursor.execute("commit")
-            messagebox.showinfo("Request successful", "Successfully updated city.")
+            args = cursor.callproc("CHECK_IF_CITY_EXISTS", [city_code1, None])
+            if (args[-1] == 1):
+                cursor.callproc("UPDATE_CITY_DETAILS", [old_city_code, city_code1, city1, zip_code1, airport1])
+                cursor.execute("commit")
+                city_code.delete(0, tk.END)
+                city.delete(0, tk.END)
+                zip_code.delete(0, tk.END)
+                airport.delete(0, tk.END)
+                city_list.delete(0, tk.END)
+                view_city()
+                messagebox.showinfo("Request successful", "Successfully updated city.")
+            else:
+                messagebox.showwarning("Invalid Request", "City does not exists.")
 
     def delete_city():
-        if (city == '' or city_code == '' or zip_code == '' or airport == ''):
+        # city1 = city.get()
+        city_code1 = city_code.get()
+        # zip_code1 = zip_code.get()
+        # airport1 = airport.get()
+        if (city_code1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have selected a city to delete.")
         else:
-            cursor.callproc("DELETE_CITY_BY_CODE", [old_city_code])
-            cursor.execute("commit")
-            messagebox.showinfo("Request successful", "Successfully deleted city.")
+            args = cursor.callproc("CHECK_IF_CITY_EXISTS", [city_code1, None])
+            if (args[-1] == 1):
+                cursor.callproc("DELETE_CITY_BY_CODE", [city_code1])
+                cursor.execute("commit")
+                city_code.delete(0, tk.END)
+                city.delete(0, tk.END)
+                zip_code.delete(0, tk.END)
+                airport.delete(0, tk.END)
+                city_list.delete(0, tk.END)
+                view_city()
+                messagebox.showinfo("Request successful", "Successfully deleted city.")
+            else:
+                messagebox.showwarning("Invalid Request", "City does not exists.")
 
     def search_city():
         city1 = city.get()
         city_code1 = city_code.get()
         zip_code1 = zip_code.get()
         airport1 = airport.get()
-        cursor.execute("SELECT * FROM CITY WHERE CITY_CODE = %s OR CITY_NAME = %s OR ZIPCODE = %s OR AIRPORT = %s;", [city_code1, city1, zip_code1, airport1])
-        records = cursor.fetchall()
-        city_list.delete(0, tk.END)
-        for rec in records:
-            city_list.insert(tk.END, rec)
+        if(city1 == '' and city_code1 == '' and zip_code1 == '' and airport1 == ''):
+            messagebox.showwarning("Invalid request", "Enter the data you want to search.")
+        else:
+            cursor.execute("SELECT * FROM CITY WHERE CITY_CODE = %s OR CITY_NAME = %s OR ZIPCODE = %s OR AIRPORT = %s;", [city_code1, city1, zip_code1, airport1])
+            records = cursor.fetchall()
+            if(len(records) == 0):
+                messagebox.showwarning("Invalid request", "No Records Found.")
+            else:
+                city_code.delete(0, tk.END)
+                city.delete(0, tk.END)
+                zip_code.delete(0, tk.END)
+                airport.delete(0, tk.END)
+                city_list.delete(0, tk.END)
+                city_list.delete(0, tk.END)
+                for rec in records:
+                    city_list.insert(tk.END, rec)
 
 
     City = tk.Tk()
@@ -123,13 +159,13 @@ def crud_city():
     airport.grid(row = 1, column = 3)
 
 
-    city_list = tk.Listbox(City, height = 15, width = 50)
+    city_list = tk.Listbox(City, height = 15, width = )
     city_list.grid(row = 2, column = 0, columnspan = 2, rowspan = 5)
 
     city_list.bind('<<ListboxSelect>>', get_selected_row)
 
     sb1= tk.Scrollbar(City, width = 10)
-    sb1.grid(row=2, column=1, columnspan = 2, rowspan = 5)
+    sb1.grid(row=2, column=1, columnspan = 3, rowspan = 5)
 
     city_list.configure(yscrollcommand = sb1.set)
     sb1.configure(command = city_list.yview)
