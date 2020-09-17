@@ -69,9 +69,13 @@ def crud_route():
         if(start_city1 == '' or dest_city1 == '' or time_taken1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have fetched all the fields.")
         else:
-            cursor.callproc("UPDATE_ROUTE", [old_route_id, time_taken1])
-            cursor.execute("commit")
-            messagebox.showinfo("Request successful", "Successfully updated route.")
+            args = cursor.callproc("CHECK_IF_ROUTE_EXISTS", [start_city1, dest_city1, None])
+            if (args[-1] == 1):
+                cursor.callproc("UPDATE_ROUTE", [old_route_id, time_taken1])
+                cursor.execute("commit")
+                messagebox.showinfo("Request successful", "Successfully updated route.")
+            else:
+                messagebox.showwarning("Invalid Request", "Route does not exists.")
 
     def delete_route():
 
@@ -99,9 +103,22 @@ def crud_route():
     route.geometry('720x500')
 
     #tk.Label(City, text="City", font=('Helvetica', '25')).grid(column=0, row=0, columnspan=2)
-    tk.Label(route, text="Start City").grid(row = 0, column = 0)
-    tk.Label(route, text="Dest City").grid(row = 1, column = 0)
-    tk.Label(route, text="Time Taken").grid(row = 0, column = 2)
+    tk.Label(route, text="Start City:").grid(row = 0, column = 0)
+    tk.Label(route, text="Dest City:").grid(row = 1, column = 0)
+    tk.Label(route, text="Time Taken:").grid(row = 0, column = 2)
+    tk.Label(route, text="Available cities:").grid(row=1, column=2)
+
+    cursor.execute("SELECT CITY_NAME FROM CITY")
+    cities = cursor.fetchall()
+
+    seatnofc = tk.StringVar()
+    seats_fc = ttk.Combobox(route, textvariable = seatnofc)
+    seats_fc['values'] = [
+                    city for city in cities
+
+    ]
+    seats_fc.current(0)
+    seats_fc.grid(row=1, column=3)
 
 
 

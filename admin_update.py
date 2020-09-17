@@ -62,14 +62,14 @@ def update_user(user_id):
     # heading = tk.Label(login, text="Travel Management System")
     # register_head = tk.Label(login, text="Register here", bg='grey',font=('Helvetica', '20'))
 
-    background = tk.PhotoImage(file='Images/edit.png')
+    background = tk.PhotoImage(file='Images/edit_admin.png')
     background_label = tk.Label(update,  image=background)
     background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     con = mysql.connect(
             host="localhost",
             user="root",
-            password="1234",
+            password="testpassword",
             database="FMS",
             port=3306
         )

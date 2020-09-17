@@ -76,7 +76,7 @@ admin_register.title('Flight Management System')
 admin_register.geometry('720x420')
 adam = Font(family="ADAM.CG PRO", size=20)
 
-background1 = tk.PhotoImage(file='Images/flight4.png')
+background1 = tk.PhotoImage(file='Images/flight4_admin.png')
 background_label = tk.Label(admin_register,  image=background1)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 

@@ -159,7 +159,7 @@ def crud_city():
     airport.grid(row = 1, column = 3)
 
 
-    city_list = tk.Listbox(City, height = 15, width = )
+    city_list = tk.Listbox(City, height = 15, width = 50)
     city_list.grid(row = 2, column = 0, columnspan = 2, rowspan = 5)
 
     city_list.bind('<<ListboxSelect>>', get_selected_row)
