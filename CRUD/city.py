@@ -7,7 +7,7 @@ def crud_city():
     con = mysql.connect(
     host="localhost",
     user="root",
-    password="shobhit2000@",
+    password="testpassword",
     database="FMS"
     )
     cursor = con.cursor()
@@ -39,7 +39,7 @@ def crud_city():
             airport.insert(tk.END, selected_tuple[3])
         else:
             pass
-        
+
 
     def insert_city():
         city1 = city.get()
@@ -65,7 +65,7 @@ def crud_city():
                 city_list.delete(0, tk.END)
                 view_city()
                 messagebox.showinfo("Request successful", "Successfully added city.")
-    
+
     def update_city():
         city1 = city.get()
         city_code1 = city_code.get()
