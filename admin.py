@@ -8,57 +8,23 @@ from CRUD import flight, company, city, route
 
 def admin_screen(admin_id, admin_name):
 
-    def insert():
-        entity_name = entity_names.get()
-        if (entity_name == 'City'):
-            city.crud_city()
-        elif (entity_name == 'Route'):
-            route.crud_route()
-        elif (entity_name == 'Company'):
-            company.crud_company()
-        elif (entity_name == 'Flight'):
-            flight.crud_flight()
-        elif (entity_name == 'Journey'):
-            journey.crud_journey()
+    def fetch_city():
+        city.crud_city()
 
-    def update():
-        entity_name = entity_names.get()
-        if (entity_name == 'City'):
-            city.crud_city()
-        elif (entity_name == 'Route'):
-            route.crud_route()
-        elif (entity_name == 'Company'):
-            company.crud_company()
-        elif (entity_name == 'Flight'):
-            flight.crud_flight()
-        elif (entity_name == 'Journey'):
-            journey.crud_journey()
+    def fetch_route():
+        pass
         
-    def delete():    
-        entity_name = entity_names.get()
-        if (entity_name == 'City'):
-            city.crud_city()
-        elif (entity_name == 'Route'):
-            route.crud_route()
-        elif (entity_name == 'Company'):
-            company.crud_company()
-        elif (entity_name == 'Flight'):
-            flight.crud_flight()
-        elif (entity_name == 'Journey'):
-            journey.crud_journey()
+    def fetch_flight():
+        flight.crud_flight()
+
+    def fetch_company():
+        pass
+
+    def fetch_journey():
+        pass
 
     def view_data():
-        entity_name = entity_names.get()
-        if (entity_name == 'City'):
-            city.crud_city()
-        elif (entity_name == 'Route'):
-            route.crud_route()
-        elif (entity_name == 'Company'):
-            company.crud_company()
-        elif (entity_name == 'Flight'):
-            flight.crud_flight()
-        elif (entity_name == 'Journey'):
-            journey.crud_journey()
+        pass
 
     
     admin = tk.Tk()
@@ -78,19 +44,19 @@ def admin_screen(admin_id, admin_name):
     label3.place(x=605, y=10)
 
 
-    City_button= tk.ttk.Button(admin, text="City", command=insert)
+    City_button= tk.ttk.Button(admin, text="City", command=fetch_city)
     City_button.place(x=20, y=250, width = 100, height = 30)
 
-    Route_button= tk.ttk.Button(admin, text="Route", command=update)
+    Route_button= tk.ttk.Button(admin, text="Route", command=fetch_route)
     Route_button.place(x=160, y=250, width = 100, height = 30)
 
-    Flight_button= tk.ttk.Button(admin, text="Flight", command=delete)
+    Flight_button= tk.ttk.Button(admin, text="Flight", command=fetch_flight)
     Flight_button.place(x=310, y=250, width = 100, height = 30)
 
-    Company_button= tk.ttk.Button(admin, text="Company", command=view_data)
+    Company_button= tk.ttk.Button(admin, text="Company", command=fetch_company)
     Company_button.place(x=460, y=250, width = 100, height = 30)
 
-    Journey_button = tk.ttk.Button(admin, text="Journey Details", command=view_data)
+    Journey_button = tk.ttk.Button(admin, text="Journey Details", command=fetch_journey)
     Journey_button.place(x=600, y=250, width = 100, height = 30)
     
     Update_button = tk.ttk.Button(admin, text="Update Details", command=view_data)

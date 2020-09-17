@@ -119,7 +119,7 @@ def crud_city():
         zip_code1 = zip_code.get()
         airport1 = airport.get()
         if(city1 == '' and city_code1 == '' and zip_code1 == '' and airport1 == ''):
-            messagebox.showwarning("Invalid request", "Enter the data you want to search.")
+            messagebox.showwarning("Invalid request", "Enter valid data you want to search.")
         else:
             cursor.execute("SELECT * FROM CITY WHERE CITY_CODE = %s OR CITY_NAME = %s OR ZIPCODE = %s OR AIRPORT = %s;", [city_code1, city1, zip_code1, airport1])
             records = cursor.fetchall()
@@ -130,7 +130,6 @@ def crud_city():
                 city.delete(0, tk.END)
                 zip_code.delete(0, tk.END)
                 airport.delete(0, tk.END)
-                city_list.delete(0, tk.END)
                 city_list.delete(0, tk.END)
                 for rec in records:
                     city_list.insert(tk.END, rec)
@@ -159,7 +158,7 @@ def crud_city():
     airport.grid(row = 1, column = 3)
 
 
-    city_list = tk.Listbox(City, height = 15, width = )
+    city_list = tk.Listbox(City, height = 15, width = 50)
     city_list.grid(row = 2, column = 0, columnspan = 2, rowspan = 5)
 
     city_list.bind('<<ListboxSelect>>', get_selected_row)
