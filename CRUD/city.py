@@ -7,7 +7,7 @@ def crud_city():
     con = mysql.connect(
     host="localhost",
     user="root",
-    password="shobhit2000@",
+    password="testpassword",
     database="FMS"
     )
     cursor = con.cursor()
@@ -26,20 +26,24 @@ def crud_city():
     def get_selected_row(event):
         global old_city_code
         print(city_list.curselection())
-        index = city_list.curselection()[0]
-        selected_tuple = city_list.get(index)
-        print(selected_tuple)
-        city_code.delete(0, tk.END)
-        city_code.insert(tk.END,selected_tuple[0])
-        old_city_code= city_code.get()
-        print(old_city_code)
-        city.delete(0, tk.END)
-        city.insert(tk.END, selected_tuple[1])
-        zip_code.delete(0, tk.END)
-        zip_code.insert(tk.END, selected_tuple[2])
-        airport.delete(0, tk.END)
-        airport.insert(tk.END, selected_tuple[3])
-        
+        if(len(city_list.curselection()) != 0):
+
+            index = city_list.curselection()[0]
+            selected_tuple = city_list.get(index)
+            print(selected_tuple)
+            city_code.delete(0, tk.END)
+            city_code.insert(tk.END,selected_tuple[0])
+            old_city_code= city_code.get()
+            print(old_city_code)
+            city.delete(0, tk.END)
+            city.insert(tk.END, selected_tuple[1])
+            zip_code.delete(0, tk.END)
+            zip_code.insert(tk.END, selected_tuple[2])
+            airport.delete(0, tk.END)
+            airport.insert(tk.END, selected_tuple[3])
+        else:
+            pass
+
 
     def insert_city():
         city1 = city.get()
@@ -59,7 +63,7 @@ def crud_city():
                 cursor.callproc("INSERT_CITY_DETAILS", [city_code1, city1, int(zip_code1), airport1])
                 cursor.execute("commit")
                 messagebox.showinfo("Request successful", "Successfully added city.")
-    
+
     def update_city():
         city1 = city.get()
         city_code1 = city_code.get()
@@ -147,4 +151,3 @@ def crud_city():
 
     City.mainloop()
 crud_city()
-
