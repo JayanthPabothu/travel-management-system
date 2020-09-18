@@ -229,4 +229,4 @@ def crud_company():
         Company.grid_columnconfigure(i,  weight =1)
 
     Company.mainloop()
-crud_company()
+# crud_company()

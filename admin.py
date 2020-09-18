@@ -4,7 +4,8 @@ from functools import partial
 from tkinter.font import Font
 from tkinter import messagebox
 import datetime
-from CRUD import flight, company, city, route
+from CRUD import flight, company, city, route, admin_journey
+import admin_update
 
 def admin_screen(admin_id, admin_name):
 
@@ -12,21 +13,22 @@ def admin_screen(admin_id, admin_name):
         city.crud_city()
 
     def fetch_route():
-        pass
-        
+        route.crud_route()
+
     def fetch_flight():
         flight.crud_flight()
 
     def fetch_company():
-        pass
+        company.crud_company()
 
     def fetch_journey():
-        pass
+        admin_journey.crud_admin_journey()
 
     def view_data():
-        pass
+        admin.destroy()
+        admin_update.update_user(admin_id)
 
-    
+
     admin = tk.Tk()
     admin.resizable(height = False, width = False)
     admin.title('Flight Management System')
@@ -36,10 +38,15 @@ def admin_screen(admin_id, admin_name):
     curr_date = datetime.date.today()
     curr_date = curr_date.strftime("%d-%m-%Y")
 
+    logo = tk.PhotoImage(file='Images/admin_logo.png')
+    photoimage = logo.subsample(3, 3)
+    logo = tk.Label(admin,  image=photoimage)
+    logo.place(x=80, y=35)
+
     label1 = tk.Label(admin, text="Admin Panel", font= adam)
-    label1.place(x=280, y=40)
-    label2 = tk.Label(admin, text="Welcome Natik", font= adam)
-    label2.place(x=270, y=100)
+    label1.place(x=310, y=65)
+    label2 = tk.Label(admin, text="Welcome Naitik", font= adam)
+    label2.place(x=285, y=125)
     label3 = tk.Label(admin, text=f"Today: {curr_date}")
     label3.place(x=605, y=10)
 
@@ -58,10 +65,10 @@ def admin_screen(admin_id, admin_name):
 
     Journey_button = tk.ttk.Button(admin, text="Journey Details", command=fetch_journey)
     Journey_button.place(x=600, y=250, width = 100, height = 30)
-    
+
     Update_button = tk.ttk.Button(admin, text="Update Details", command=view_data)
     Update_button.place(x=10, y=10, width = 100, height = 30)
-    
+
     # table_name = ['BUS', 'CAR', 'FLIGHT', 'CITY', 'ROUTE', 'AMENITIES', 'COMPANY', 'EMPLOYEE']
     # row_counter = 4
     # add_row = 0
@@ -90,4 +97,4 @@ def admin_screen(admin_id, admin_name):
 
     admin.mainloop()
 
-admin_screen(1, 'admin')
+# admin_screen(1, 'admin')

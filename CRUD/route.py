@@ -186,4 +186,4 @@ def crud_route():
         route.grid_columnconfigure(i,  weight =1)
 
     route.mainloop()
-crud_route()
+# crud_route()

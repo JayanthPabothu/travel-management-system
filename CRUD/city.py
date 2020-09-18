@@ -185,4 +185,4 @@ def crud_city():
         City.grid_columnconfigure(i,  weight =1)
 
     City.mainloop()
-crud_city()
+# crud_city()

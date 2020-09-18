@@ -7,6 +7,7 @@ from functools import partial
 from tkinter import messagebox
 import pay
 import journey as j
+import datetime
 
 def convert_timedelta(duration, code):
     seconds = duration.seconds
@@ -48,6 +49,23 @@ def booking_screen(source, dest, date, user_id, journey):
     else:
         cursor.execute("SELECT FLIGHT_NO, JOURNEY_ID FROM JOURNEY_FLIGHT WHERE JOURNEY_DATE=%s AND JOURNEY_STATUS=1;", [str(date)])
         records = cursor.fetchall()
+        flight_nos = []
+        time_values = []
+        curr_time = datetime.datetime.now()
+        hrs = curr_time.hour
+        mins = curr_time.minute
+        for i in records:
+            flight_nos.append(i[0])
+        for flight in flight_nos:
+            cursor.execute("SELECT DEPARTURE_TIME FROM FLIGHT WHERE FLIGHT_NO = %s", [flight])
+            time_values.append(cursor.fetchall()[0][0])
+        for i in range(len(flight_nos)):
+            if (time_values[i].seconds//3600 <= hrs):   # Hours check
+                if (((time_values[i]).seconds//60)%60 <= mins ):    # Min check
+                    print("Deleting data")
+                    records.pop(i)
+
+
         if len(records)==0:
             messagebox.showwarning("Record not found!", "No flights available for the given journey details.")
         else:

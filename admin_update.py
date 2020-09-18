@@ -5,13 +5,19 @@ import mysql.connector as mysql
 import datetime as dt
 from tkinter import messagebox
 from tkinter.font import Font
+import login
 
 def _from_rgb(rgb):
     """translates an rgb tuple of int to a tkinter friendly color code
     """
     return "#%02x%02x%02x" % rgb
 
+
 def update_user(user_id):
+
+    def on_closing():
+        update.destroy()
+        login.main_screen()
 
     def update_data(user_id, update):
         name1 = entry_name1.get()
@@ -163,9 +169,11 @@ def update_user(user_id):
     entry_contact.place(x=580, y=260)
 
 
-    update = tk.ttk.Button(update, text="Update values", command=partial(update_data, user_id, update))
-    update.place(x=550, y=300)
+    submit = tk.ttk.Button(update, text="Update values", command=partial(update_data, user_id, update))
+    submit.place(x=550, y=300)
+
+    update.protocol("WM_DELETE_WINDOW", on_closing)
 
     update.mainloop()
 
-update_user(1)
+# update_user(1)

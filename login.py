@@ -3,7 +3,7 @@ from tkinter.ttk import *
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
-import homepage, about
+import homepage, about, admin
 from tkinter.font import Font
 
 

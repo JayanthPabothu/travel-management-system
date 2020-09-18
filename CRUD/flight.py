@@ -9,7 +9,7 @@ def crud_flight():
     con = mysql.connect(
         host="localhost",
         user="root",
-        password="shobhit2000@",
+        password="testpassword",
         database="FMS"
         )
 
@@ -64,7 +64,7 @@ def crud_flight():
         business1 = Business.get()
         premium1 = Premium.get()
         comp1 = Company.get()
-        if(flight_no1 == '' or model == '' or departure == '' or route1 == '' or price1 == '' or baggage1 == '' or first1 == '' or 
+        if(flight_no1 == '' or model == '' or departure == '' or route1 == '' or price1 == '' or baggage1 == '' or first1 == '' or
                 eco == '' or business1 == '' or premium1 == '' or comp1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
         else:
@@ -114,7 +114,7 @@ def crud_flight():
         business1 = Business.get()
         premium1 = Premium.get()
         comp1 = Company.get()
-        if(flight_no1 == '' or model == '' or departure == '' or route1 == '' or price1 == '' or baggage1 == '' or first1 == '' or 
+        if(flight_no1 == '' or model == '' or departure == '' or route1 == '' or price1 == '' or baggage1 == '' or first1 == '' or
                 eco == '' or business1 == '' or premium1 == '' or comp1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
         else:
@@ -140,7 +140,7 @@ def crud_flight():
                     Premium.delete(0, tk.END)
                     Company.delete(0, tk.END)
                     view_flight()
-                    messagebox.showinfo("Request successful", "Successfully updated flight.")    
+                    messagebox.showinfo("Request successful", "Successfully updated flight.")
                 except:
                     messagebox.showwarning("Invalid Request", "Flight does not exists.")
 
@@ -172,7 +172,7 @@ def crud_flight():
         business1 = Business.get()
         premium1 = Premium.get()
         comp1 = Company.get()
-        if(flight_no1 == '' and model == '' and departure == '' and route1 == '' and price1 == '' and baggage1 == '' and first1 == '' and 
+        if(flight_no1 == '' and model == '' and departure == '' and route1 == '' and price1 == '' and baggage1 == '' and first1 == '' and
                 eco == '' and business1 == '' and premium1 == '' and comp1 == ''):
             messagebox.showwarning("Invalid request", "Enter valid data you want to serach.")
         else:
@@ -214,8 +214,8 @@ def crud_flight():
     tk.Label(flight, text="Economy Seats").grid(column=2, row=2)
     tk.Label(flight, text="Business Seats").grid(column=4, row=2)
     tk.Label(flight, text="Premium Seats").grid(column=6, row=2)
-    
-    
+
+
 
     flight_no = tk.ttk.Entry(flight)
     flight_no.grid(column=1, row=0)
@@ -275,8 +275,8 @@ def crud_flight():
     tk.ttk.Button(flight, text="View All", command=view_flight, width = 12).grid(row= 8, column=6, columnspan = 2)
     tk.ttk.Button(flight, text="Search", command=search_flight, width = 12).grid(row= 9, column=6, columnspan = 2)
 
-    cursor = con.cursor()     
-    cursor.execute("SELECT ROUTE_ID, START_CITY, DEST_CITY FROM ROUTE;") 
+    cursor = con.cursor()
+    cursor.execute("SELECT ROUTE_ID, START_CITY, DEST_CITY FROM ROUTE;")
     city_records = cursor.fetchall()
 
 
@@ -289,8 +289,8 @@ def crud_flight():
 
 
 
-    cursor = con.cursor()     
-    cursor.execute("SELECT COMPANY_ID, COMPANY_NAME FROM COMPANY;") 
+    cursor = con.cursor()
+    cursor.execute("SELECT COMPANY_ID, COMPANY_NAME FROM COMPANY;")
     company_records = cursor.fetchall()
 
     comp = tk.StringVar()
@@ -303,7 +303,7 @@ def crud_flight():
 
     # tk.ttk.Button(flight, text="Submit").grid(column=0, row=13, columnspan=2)
 
-    
+
     # cursor = con.cursor()
 
     # # Fetching route ids for dropdown
@@ -346,4 +346,4 @@ def crud_flight():
 
     flight.mainloop()
 
-crud_flight()
+# crud_flight()

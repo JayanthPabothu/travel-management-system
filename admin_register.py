@@ -56,7 +56,7 @@ def register_user():
                 id = records[0][0]
                 con.close()
                 admin_register.destroy()
-                #homepage.homepage_screen(id, email, name, credit)
+                login.main_screen()
 
             else:
                 messagebox.showwarning("User already exists", "Try registering with different email-id.")
