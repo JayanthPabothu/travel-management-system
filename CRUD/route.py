@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import mysql.connector as mysql
+import datetime as dt
 
 def crud_route():
     con = mysql.connect(
@@ -52,13 +53,24 @@ def crud_route():
         if(start_city1 == '' or dest_city1 == '' or time_taken1 == ''):
             messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
         else:
-            args = cursor.callproc("CHECK_IF_ROUTE_EXISTS", [start_city1, dest_city1, None])
-            if (args[-1] == 1):
-                messagebox.showwarning("Route already exists", "Please enter a new route.")
-            else:
-                cursor.callproc("INSERT_ROUTE", [start_city1, dest_city1, time_taken1])
-                cursor.execute("commit")
-                messagebox.showinfo("Request successful", "Successfully added city.")
+            try:
+                time_taken1 = dt.datetime.strptime(time_taken1, "%H:%M:%S")
+                args = cursor.callproc("CHECK_IF_ROUTE_EXISTS", [start_city1, dest_city1, None])
+                if (args[-1] == 1):
+                    messagebox.showwarning("Route already exists", "Please enter a new route.")
+                else:
+                    cursor.callproc("INSERT_ROUTE", [start_city1, dest_city1, time_taken1])
+                    cursor.execute("commit")
+                    start_city.delete(0, tk.END)
+                    dest_city.delete(0, tk.END)
+                    time_taken.delete(0, tk.END)
+                    route_list.delete(0, tk.END)
+                    view_route()
+
+                    messagebox.showinfo("Request successful", "Successfully added route.")
+            except:
+                messagebox.showwarning("Invalid request", "Please enter time taken in the valid format.")
+
 
     def update_route():
         start_city1 = start_city.get()
@@ -71,9 +83,19 @@ def crud_route():
         else:
             args = cursor.callproc("CHECK_IF_ROUTE_EXISTS", [start_city1, dest_city1, None])
             if (args[-1] == 1):
-                cursor.callproc("UPDATE_ROUTE", [old_route_id, time_taken1])
-                cursor.execute("commit")
-                messagebox.showinfo("Request successful", "Successfully updated route.")
+                try:
+                    time_taken1 = dt.datetime.strptime(time_taken1, "%H:%M:%S")
+                    cursor.callproc("UPDATE_ROUTE", [old_route_id, time_taken1])
+                    cursor.execute("commit")
+                    start_city.delete(0, tk.END)
+                    dest_city.delete(0, tk.END)
+                    time_taken.delete(0, tk.END)
+                    route_list.delete(0, tk.END)
+                    view_route()
+                    messagebox.showinfo("Request successful", "Successfully updated route.")
+                except:
+                    messagebox.showwarning("Invalid Request", "Please enter time taken in the valid format.")
+
             else:
                 messagebox.showwarning("Invalid Request", "Route does not exists.")
 
@@ -84,6 +106,11 @@ def crud_route():
         else:
             cursor.callproc("DELETE_ROUTE", [old_start_city, old_dest_city])
             cursor.execute("commit")
+            start_city.delete(0, tk.END)
+            dest_city.delete(0, tk.END)
+            time_taken.delete(0, tk.END)
+            route_list.delete(0, tk.END)
+            view_route()
             messagebox.showinfo("Request successful", "Successfully deleted city.")
 
     def search_route():
