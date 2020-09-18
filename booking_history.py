@@ -6,9 +6,9 @@ from mysql.connector import Error
 from functools import partial
 from tkinter import messagebox
 import datetime
-import homepage
 
-def history_screen(cust_id):
+
+def history_screen(cust_id, homepage):
 
 
     def on_closing():
@@ -18,7 +18,7 @@ def history_screen(cust_id):
         user_name = records[0][0]
         credit_points = records[0][1]
         email = records[0][2]
-
+        import homepage
         homepage.homepage_screen(cust_id, email, user_name, credit_points)
 
     con = mysql.connect(
@@ -45,6 +45,7 @@ def history_screen(cust_id):
     if len(res)==0:
         messagebox.showwarning("Record not found!", "No bookings done yet.")
     else:
+        homepage.destroy()
         dict_data['journey_ids']=[str(id[0]) for id in res]
         dict_data['date_book']=[str(id[1].strftime("%d-%m-%Y")) for id in res]
         dict_data['price']=[str(id[2]) for id in res]
@@ -59,8 +60,6 @@ def history_screen(cust_id):
             cursor.execute("SELECT JOURNEY_DATE FROM JOURNEY_FLIGHT WHERE JOURNEY_ID=%s;", [journey])
             jdate=cursor.fetchmany(size=1)
             dict_data["date_journey"].append(jdate[0][0])
-
-        print(dict_data)
 
 
         root = tk.Tk()
@@ -87,7 +86,6 @@ def history_screen(cust_id):
         font20 = Font(family='Arial', size=20)
         font30 = Font(family='Arial', size=30, weight='bold')
 
-        print(dict_data)
         for i in range(len(dict_data['journey_ids'])):
             tk.Label(scrollable_frame, text="Booking No: "+str(i+1), font=font20).grid(column=0, row=0+(6*i), padx=50)
             tk.Label(scrollable_frame, text="Journey ID: "+dict_data['journey_ids'][i], font=font15).grid(column=0, row=1+(6*i), padx=50)

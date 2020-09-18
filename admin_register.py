@@ -42,26 +42,34 @@ def register_user():
     if(name=='' or email=='' or password=='' or street=='' or city=='' or phone=='' or DOB_day=='' or DOB_month=='' or DOB_year=='' or code==''):
         messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
     else:
-        if code=='1111':
-            cursor = con.cursor()
-            cursor.execute("SELECT EXISTS(SELECT EMAIL_ID FROM SYS_ADMIN WHERE EMAIL_ID = %s);", [email])
-            status = cursor.fetchall()
-            if (status[0][0] == 0):
-                cursor.callproc("INSERT_ADMIN", [name, email, password, gender, dob, street, city, zipcode, phone])
-                cursor.execute("commit")
+        try:
+            phone = int(phone)
+            zipcode = int(zipcode)
+            if(len(str(phone)) == 10 and len(str(zipcode)) == 6):
+                if code=='1111':
+                    cursor = con.cursor()
+                    cursor.execute("SELECT EXISTS(SELECT EMAIL_ID FROM SYS_ADMIN WHERE EMAIL_ID = %s);", [email])
+                    status = cursor.fetchall()
+                    if (status[0][0] == 0):
+                        cursor.callproc("INSERT_ADMIN", [name, email, password, gender, dob, street, city, zipcode, phone])
+                        cursor.execute("commit")
 
-                messagebox.showinfo("Status", "You have successfully registered!")
-                cursor.execute('SELECT ADMIN_ID FROM SYS_ADMIN WHERE EMAIL_ID = %s;', [email])
-                records = cursor.fetchall()
-                id = records[0][0]
-                con.close()
-                admin_register.destroy()
-                login.main_screen()
+                        messagebox.showinfo("Status", "You have successfully registered!")
+                        cursor.execute('SELECT ADMIN_ID FROM SYS_ADMIN WHERE EMAIL_ID = %s;', [email])
+                        records = cursor.fetchall()
+                        id = records[0][0]
+                        con.close()
+                        admin_register.destroy()
+                        login.main_screen()
 
+                    else:
+                        messagebox.showwarning("User already exists", "Try registering with different email-id.")
+                else:
+                    messagebox.showwarning("Code Error", "Please enter the correct code provided \nto you by FMS Developers.")
             else:
-                messagebox.showwarning("User already exists", "Try registering with different email-id.")
-        else:
-            messagebox.showwarning("Code Error", "Please enter the correct code provided to you by FMS Developers.")
+                messagebox.showwarning("Code Error", "Please enter valid details.")
+        except:
+            messagebox.showwarning("Code Error", "Please enter valid details.")
 
 
 def _from_rgb(rgb):

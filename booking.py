@@ -41,63 +41,14 @@ def booking_screen(source, dest, date, user_id, journey):
     routes = cursor.fetchall()
     if len(routes)==0:
         messagebox.showwarning("Record not found!", "No flights available for the given journey details.")
-        root.destroy()
-        j.journey_screen(user_id)
-
-
 
     else:
         cursor.execute("SELECT FLIGHT_NO, JOURNEY_ID FROM JOURNEY_FLIGHT WHERE JOURNEY_DATE=%s AND JOURNEY_STATUS=1;", [str(date)])
         records = cursor.fetchall()
-        flight_nos = []
-        time_values = []
-        curr_time = datetime.datetime.now()
-        hrs = curr_time.hour
-        mins = curr_time.minute
-        for i in records:
-            flight_nos.append(i[0])
-        for flight in flight_nos:
-            cursor.execute("SELECT DEPARTURE_TIME FROM FLIGHT WHERE FLIGHT_NO = %s", [flight])
-            time_values.append(cursor.fetchall()[0][0])
-        for i in range(len(flight_nos)):
-            if (time_values[i].seconds//3600 <= hrs):   # Hours check
-                if (((time_values[i]).seconds//60)%60 <= mins ):    # Min check
-                    print("Deleting data")
-                    records.pop(i)
-
 
         if len(records)==0:
             messagebox.showwarning("Record not found!", "No flights available for the given journey details.")
         else:
-            journey.destroy()
-            root = tk.Tk()
-            root.title('Flight Management System')
-            root.geometry('720x420')
-            root.resizable(height = False, width = False)
-            container = tk.Frame(root, width=720, height=420, bg="blue")
-            canvas = tk.Canvas(container, width=700, height=400)
-            scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
-            scrollable_frame = ttk.Frame(canvas)
-
-            scrollable_frame.bind(
-                "<Configure>",
-                lambda e: canvas.configure(
-                    scrollregion=canvas.bbox("all")
-                )
-            )
-
-            canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-
-            canvas.configure(yscrollcommand=scrollbar.set)
-            result_box = []
-            no_of_results = 10
-            ini_col = 0
-            ini_row = 1
-
-            font10 = Font(family='Arial', size=10)
-            font15 = Font(family='Arial', size=15)
-            font20 = Font(family='Arial', size=20)
-            font30 = Font(family='Arial', size=30, weight='bold')
 
             data_dict = {
                 'flight_id':[],
@@ -112,6 +63,20 @@ def booking_screen(source, dest, date, user_id, journey):
                 'dest_airport':''
             }
             new_dict = {}
+
+            final_dict={
+            'flight_id':[],
+            'model_name':[],
+            'start_city':'',
+            'dest_city':'',
+            'start_time':[],
+            'duration':[],
+            'end_time':[],
+            'comp_name':[],
+            'start_airport':'',
+            'dest_airport':''
+            }
+
             for i in records:
                 new_dict[i[0]] = i[1]
             print(new_dict)
@@ -120,11 +85,15 @@ def booking_screen(source, dest, date, user_id, journey):
             record = cursor.fetchmany(size=1)
             data_dict['start_city']=str(record[0][0])
             data_dict['start_airport']=str(record[0][1])
+            final_dict['start_city']=str(record[0][0])
+            final_dict['start_airport']=str(record[0][1])
 
             cursor.execute("SELECT CITY_NAME, AIRPORT FROM CITY WHERE CITY_CODE=%s", [str(dest)])
             record = cursor.fetchmany(size=1)
             data_dict['dest_city']=str(record[0][0])
             data_dict['dest_airport']=str(record[0][1])
+            final_dict['dest_city']=str(record[0][0])
+            final_dict['dest_airport']=str(record[0][1])
 
             data_dict['flight_id']=[id[0] for id in records]
             data_dict['journey_id']=[id[1] for id in records]
@@ -141,36 +110,133 @@ def booking_screen(source, dest, date, user_id, journey):
             data_dict['duration']=list(map(convert_timedelta, data_dict['duration'], [2]*len(data_dict['duration'])))
             data_dict['end_time']=list(map(convert_timedelta, data_dict['end_time'], [1]*len(data_dict['end_time'])))
             print(data_dict)
+
+            curr_time = datetime.datetime.now()
+            hrs = curr_time.hour
+            mins = curr_time.minute
+            counter=0
+            print(str(date)[8:], datetime.datetime.today().strftime('%d'), int((data_dict['start_time'][0])[0:2]), int((data_dict['start_time'][0])[3:]))
             for i in range(len(data_dict['flight_id'])):
+                if(str(date)[8:] > datetime.datetime.today().strftime('%d')):
+                    final_dict['flight_id'].append(data_dict['flight_id'][i])
+                    final_dict['comp_name'].append(data_dict['comp_name'][i])
+                    final_dict['start_time'].append(data_dict['start_time'][i])
+                    final_dict['duration'].append(data_dict['duration'][i])
+                    final_dict['model_name'].append(data_dict['model_name'][i])
+                    # tk.Label(scrollable_frame, text=data_dict['comp_name'][i], font=font20).grid(column=0, row=0+(6*i), padx=70)
+                    #
+                    # tk.Label(scrollable_frame, text=data_dict['start_city'], font=font15).grid(column=0, row=1+(6*i))
+                    # tk.Label(scrollable_frame, text=data_dict['start_time'][i], font=font30).grid(column=0, row=2+(6*i))
+                    # tk.Label(scrollable_frame, text=data_dict['start_airport'], font=font10).grid(column=0, row=3+(6*i))
+                    #
+                    # tk.Label(scrollable_frame, text=data_dict['duration'][i], font=font10).grid(column=2, row=1+(6*i), sticky="S")
+                    # tk.Label(scrollable_frame, text="---------------->", font=font20).grid(column=2, row=2+(6*i))
+                    #
+                    # tk.Label(scrollable_frame, text=data_dict['model_name'][i], font=font10).grid(column=4, row=0+(6*i), padx=70)
+                    # tk.Label(scrollable_frame, text=data_dict['dest_city'], font=font15).grid(column=4, row=1+(6*i))
+                    # tk.Label(scrollable_frame, text=data_dict['end_time'][i], font=font30).grid(column=4, row=2+(6*i))
+                    # tk.Label(scrollable_frame, text=data_dict['dest_airport'], font=font10).grid(column=4, row=3+(6*i))
+                    # tk.Label(scrollable_frame, text=data_dict['flight_id'][i], font=font10).grid(column=2, row=3+(6*i), sticky="N")
+                    #
+                    # tk.ttk.Button(scrollable_frame, text="Book now", command=partial(get_payment, data_dict['flight_id'][i], user_id, new_dict[data_dict['flight_id'][i]])).grid(column=2, row=4+(6*i), pady=(10, 70))
+                    counter = counter+1
+                elif(str(date)[8:] == datetime.datetime.today().strftime('%d')):
+                    if(int((data_dict['start_time'][i])[0:2]) > hrs):
+                        counter = counter+1
+                        final_dict['flight_id'].append(data_dict['flight_id'][i])
+                        final_dict['comp_name'].append(data_dict['comp_name'][i])
+                        final_dict['start_time'].append(data_dict['start_time'][i])
+                        final_dict['duration'].append(data_dict['duration'][i])
+                        final_dict['model_name'].append(data_dict['model_name'][i])
+                        final_dict['end_time'].append(data_dict['end_time'][i])
+                    elif(int((data_dict['start_time'][i])[0:2]) == hrs):
+                        if(int((data_dict['start_time'][i])[3:]) > mins):
+                            counter = counter+1
+                            final_dict['flight_id'].append(data_dict['flight_id'][i])
+                            final_dict['comp_name'].append(data_dict['comp_name'][i])
+                            final_dict['start_time'].append(data_dict['start_time'][i])
+                            final_dict['duration'].append(data_dict['duration'][i])
+                            final_dict['model_name'].append(data_dict['model_name'][i])
+                            final_dict['end_time'].append(data_dict['end_time'][i])
+                            # tk.Label(scrollable_frame, text=data_dict['comp_name'][i], font=font20).grid(column=0, row=0+(6*i), padx=70)
+                            #
+                            # tk.Label(scrollable_frame, text=data_dict['start_city'], font=font15).grid(column=0, row=1+(6*i))
+                            # tk.Label(scrollable_frame, text=data_dict['start_time'][i], font=font30).grid(column=0, row=2+(6*i))
+                            # tk.Label(scrollable_frame, text=data_dict['start_airport'], font=font10).grid(column=0, row=3+(6*i))
+                            #
+                            # tk.Label(scrollable_frame, text=data_dict['duration'][i], font=font10).grid(column=2, row=1+(6*i), sticky="S")
+                            # tk.Label(scrollable_frame, text="---------------->", font=font20).grid(column=2, row=2+(6*i))
+                            #
+                            # tk.Label(scrollable_frame, text=data_dict['model_name'][i], font=font10).grid(column=4, row=0+(6*i), padx=70)
+                            # tk.Label(scrollable_frame, text=data_dict['dest_city'], font=font15).grid(column=4, row=1+(6*i))
+                            # tk.Label(scrollable_frame, text=data_dict['end_time'][i], font=font30).grid(column=4, row=2+(6*i))
+                            # tk.Label(scrollable_frame, text=data_dict['dest_airport'], font=font10).grid(column=4, row=3+(6*i))
+                            # tk.Label(scrollable_frame, text=data_dict['flight_id'][i], font=font10).grid(column=2, row=3+(6*i), sticky="N")
+                            #
+                            # tk.ttk.Button(scrollable_frame, text="Book now", command=partial(get_payment, data_dict['flight_id'][i], user_id, new_dict[data_dict['flight_id'][i]])).grid(column=2, row=4+(6*i), pady=(10, 70))
+            if (counter == 0):
+                messagebox.showwarning("Record not found!", "No flights available for the given journey details.")
+            else:
+                journey.destroy()
+                root = tk.Tk()
+                root.title('Flight Management System')
+                root.geometry('720x420')
+                root.resizable(height = False, width = False)
+                container = tk.Frame(root, width=720, height=420, bg="blue")
+                canvas = tk.Canvas(container, width=700, height=400)
+                scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+                scrollable_frame = ttk.Frame(canvas)
 
-                tk.Label(scrollable_frame, text=data_dict['comp_name'][i], font=font20).grid(column=0, row=0+(6*i), padx=70)
+                scrollable_frame.bind(
+                    "<Configure>",
+                    lambda e: canvas.configure(
+                        scrollregion=canvas.bbox("all")
+                    )
+                )
 
-                tk.Label(scrollable_frame, text=data_dict['start_city'], font=font15).grid(column=0, row=1+(6*i))
-                tk.Label(scrollable_frame, text=data_dict['start_time'][i], font=font30).grid(column=0, row=2+(6*i))
-                tk.Label(scrollable_frame, text=data_dict['start_airport'], font=font10).grid(column=0, row=3+(6*i))
+                canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
 
-                tk.Label(scrollable_frame, text=data_dict['duration'][i], font=font10).grid(column=2, row=1+(6*i), sticky="S")
-                tk.Label(scrollable_frame, text="---------------->", font=font20).grid(column=2, row=2+(6*i))
+                canvas.configure(yscrollcommand=scrollbar.set)
+                result_box = []
+                no_of_results = 10
+                ini_col = 0
+                ini_row = 1
 
-                tk.Label(scrollable_frame, text=data_dict['model_name'][i], font=font10).grid(column=4, row=0+(6*i), padx=70)
-                tk.Label(scrollable_frame, text=data_dict['dest_city'], font=font15).grid(column=4, row=1+(6*i))
-                tk.Label(scrollable_frame, text=data_dict['end_time'][i], font=font30).grid(column=4, row=2+(6*i))
-                tk.Label(scrollable_frame, text=data_dict['dest_airport'], font=font10).grid(column=4, row=3+(6*i))
-                tk.Label(scrollable_frame, text=data_dict['flight_id'][i], font=font10).grid(column=2, row=3+(6*i), sticky="N")
+                font10 = Font(family='Arial', size=10)
+                font15 = Font(family='Arial', size=15)
+                font20 = Font(family='Arial', size=20)
+                font30 = Font(family='Arial', size=30, weight='bold')
+                print(final_dict)
 
-                tk.ttk.Button(scrollable_frame, text="Book now", command=partial(get_payment, data_dict['flight_id'][i], user_id, new_dict[data_dict['flight_id'][i]])).grid(column=2, row=4+(6*i), pady=(10, 70))
+                for i in range(len(final_dict['flight_id'])):
+                    tk.Label(scrollable_frame, text=final_dict['comp_name'][i], font=font20).grid(column=0, row=0+(6*i), padx=70)
 
-            n_rows = 30
-            n_columns = 10
-            for i in range(n_rows):
-                root.grid_rowconfigure(i,  weight =1)
-            for i in range(n_columns):
-                root.grid_columnconfigure(i,  weight =1)
+                    tk.Label(scrollable_frame, text=final_dict['start_city'], font=font15).grid(column=0, row=1+(6*i))
+                    tk.Label(scrollable_frame, text=final_dict['start_time'][i], font=font30).grid(column=0, row=2+(6*i))
+                    tk.Label(scrollable_frame, text=final_dict['start_airport'], font=font10).grid(column=0, row=3+(6*i))
 
-            container.pack()
-            canvas.pack(side="left", fill="both", expand=True)
-            scrollbar.pack(side="right", fill="y")
+                    tk.Label(scrollable_frame, text=final_dict['duration'][i], font=font10).grid(column=2, row=1+(6*i), sticky="S")
+                    tk.Label(scrollable_frame, text="---------------->", font=font20).grid(column=2, row=2+(6*i))
 
-            root.protocol("WM_DELETE_WINDOW", on_closing)
+                    tk.Label(scrollable_frame, text=final_dict['model_name'][i], font=font10).grid(column=4, row=0+(6*i), padx=70)
+                    tk.Label(scrollable_frame, text=final_dict['dest_city'], font=font15).grid(column=4, row=1+(6*i))
+                    tk.Label(scrollable_frame, text=final_dict['end_time'][i], font=font30).grid(column=4, row=2+(6*i))
+                    tk.Label(scrollable_frame, text=final_dict['dest_airport'], font=font10).grid(column=4, row=3+(6*i))
+                    tk.Label(scrollable_frame, text=final_dict['flight_id'][i], font=font10).grid(column=2, row=3+(6*i), sticky="N")
 
-            root.mainloop()
+                    tk.ttk.Button(scrollable_frame, text="Book now", command=partial(get_payment, final_dict['flight_id'][i], user_id, new_dict[final_dict['flight_id'][i]])).grid(column=2, row=4+(6*i), pady=(10, 70))
+
+                n_rows = 30
+                n_columns = 10
+                for i in range(n_rows):
+                    root.grid_rowconfigure(i,  weight =1)
+                for i in range(n_columns):
+                    root.grid_columnconfigure(i,  weight =1)
+
+                container.pack()
+                canvas.pack(side="left", fill="both", expand=True)
+                scrollbar.pack(side="right", fill="y")
+
+                root.protocol("WM_DELETE_WINDOW", on_closing)
+
+                root.mainloop()

@@ -7,7 +7,6 @@ from tkinter import messagebox
 import homepage, login
 
 def pay_screen(flight_id, user_id, journey_id):
-
     def on_closing():
         if messagebox.askokcancel("Quit", "Are you sure? \nYour ticket will not be booked if you quit."):
             pay_window.destroy()
@@ -67,7 +66,7 @@ def pay_screen(flight_id, user_id, journey_id):
         )
     cursor = con.cursor()
 
-    cursor.execute("SELECT NO_OF_FIRSTCLASS_SEATS, NO_OF_ECONOMY_SEATS, NO_OF_BUSINESS_SEATS, NO_OF_PREMIUM_SEATS, PRICE FROM FLIGHT WHERE FLIGHT_NO=%s;", ['AI 111'])
+    cursor.execute("SELECT NO_OF_FIRSTCLASS_SEATS, NO_OF_ECONOMY_SEATS, NO_OF_BUSINESS_SEATS, NO_OF_PREMIUM_SEATS, PRICE FROM FLIGHT WHERE FLIGHT_NO=%s;", [flight_id])
     rec = cursor.fetchmany(size=1)
     fc_seats = [i for i in range(1, rec[0][0]+1)]
     e_seats = [i for i in range(1, rec[0][1]+1)]

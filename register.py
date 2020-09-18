@@ -3,7 +3,7 @@ from tkinter.ttk import *
 import mysql.connector as mysql
 from mysql.connector import Error
 from tkinter import messagebox
-import admin, login
+import admin, login, homepage
 from tkinter.font import Font
 
 gender_mapper = {1: 'M', 2: 'F', 3: 'T'}
@@ -35,25 +35,32 @@ def register_user():
     if(name=='' or email=='' or password=='' or street=='' or city=='' or phone=='' or DOB_day=='' or DOB_month=='' or DOB_year==''):
         messagebox.showwarning("Invalid request", "Please make sure you have filled all the fields.")
     else:
-        cursor = con.cursor()
-        cursor.execute("SELECT EXISTS(SELECT EMAIL_ID FROM CUSTOMER WHERE EMAIL_ID = %s);", [email])
-        status = cursor.fetchall()
-        if (status[0][0] == 0):
-            cursor.callproc("INSERT_CUSTOMER", [name, email, password, gender, dob, street, city, zipcode, phone])
-            cursor.execute("commit")
+        try:
+            phone = int(phone)
+            zipcode = int(zipcode)
+            if(len(str(phone)) == 10 and len(str(zipcode)) == 6):
+                cursor = con.cursor()
+                cursor.execute("SELECT EXISTS(SELECT EMAIL_ID FROM CUSTOMER WHERE EMAIL_ID = %s);", [email])
+                status = cursor.fetchall()
+                if (status[0][0] == 0):
+                    cursor.callproc("INSERT_CUSTOMER", [name, email, password, gender, dob, street, city, zipcode, phone])
+                    cursor.execute("commit")
 
-            messagebox.showinfo("Status", "You have successfully registered!")
-            cursor.execute('SELECT CUSTOMER_ID, CREDIT_POINTS FROM CUSTOMER WHERE EMAIL_ID = %s;', [email])
-            records = cursor.fetchall()
-            id = records[0][0]
-            credit = records[0][1]
-            con.close()
-            register.destroy()
-            homepage.homepage_screen(id, email, name, credit)
+                    messagebox.showinfo("Status", "You have successfully registered!")
+                    cursor.execute('SELECT CUSTOMER_ID, CREDIT_POINTS FROM CUSTOMER WHERE EMAIL_ID = %s;', [email])
+                    records = cursor.fetchall()
+                    id = records[0][0]
+                    credit = records[0][1]
+                    con.close()
+                    register.destroy()
+                    homepage.homepage_screen(id, email, name, credit)
 
-        else:
-            messagebox.showwarning("User already exists", "Try registering with different email-id.")
-
+                else:
+                    messagebox.showwarning("User already exists", "Try registering with different email-id.")
+            else:
+                messagebox.showwarning("Code Error", "Please enter valid details.")
+        except:
+            messagebox.showwarning("Code Error", "Please enter valid details.")
 
 
 def _from_rgb(rgb):

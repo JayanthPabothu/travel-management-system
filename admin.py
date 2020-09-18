@@ -6,28 +6,64 @@ from tkinter import messagebox
 import datetime
 from CRUD import flight, company, city, route, admin_journey
 import admin_update
+import mysql.connector as mysql
+from tkinter import messagebox
 
 def admin_screen(admin_id, admin_name):
 
     def fetch_city():
+        admin.destroy()
         city.crud_city()
+        admin_screen(admin_id, admin_name)
 
     def fetch_route():
+        admin.destroy()
         route.crud_route()
+        admin_screen(admin_id, admin_name)
+
 
     def fetch_flight():
+        admin.destroy()
         flight.crud_flight()
+        admin_screen(admin_id, admin_name)
+
 
     def fetch_company():
+        admin.destroy()
         company.crud_company()
+        admin_screen(admin_id, admin_name)
+
 
     def fetch_journey():
+        admin.destroy()
         admin_journey.crud_admin_journey()
+        admin_screen(admin_id, admin_name)
+
 
     def view_data():
         admin.destroy()
         admin_update.update_user(admin_id)
 
+    def delete_the_admin():
+        if messagebox.askokcancel("Quit", "Are you sure?"):
+            con = mysql.connect(
+                    host="localhost",
+                    user="root",
+                    password="testpassword",
+                    database="FMS"
+                )
+            cursor = con.cursor()
+            cursor.callproc("DELETE_ADMIN_DETAILS", [admin_id])
+            cursor.execute("commit")
+            messagebox.showwarning("Request successful", "Your account has been successfully deleted.")
+            admin.destroy()
+            import login
+            login.main_screen()
+
+    def get_logout():
+        admin.destroy()
+        import login
+        login.main_screen()
 
     admin = tk.Tk()
     admin.resizable(height = False, width = False)
@@ -45,7 +81,7 @@ def admin_screen(admin_id, admin_name):
 
     label1 = tk.Label(admin, text="Admin Panel", font= adam)
     label1.place(x=310, y=65)
-    label2 = tk.Label(admin, text="Welcome Naitik", font= adam)
+    label2 = tk.Label(admin, text="Welcome "+admin_name, font= adam)
     label2.place(x=285, y=125)
     label3 = tk.Label(admin, text=f"Today: {curr_date}")
     label3.place(x=605, y=10)
@@ -68,6 +104,13 @@ def admin_screen(admin_id, admin_name):
 
     Update_button = tk.ttk.Button(admin, text="Update Details", command=view_data)
     Update_button.place(x=10, y=10, width = 100, height = 30)
+
+    delete_admin = tk.ttk.Button(admin, text="Delete Account", command=delete_the_admin)
+    delete_admin.place(x=10, y=50, width = 100, height = 30)
+
+    logout = tk.ttk.Button(admin, text="Logout", command=get_logout)
+    logout.place(x=10, y=90, width = 100, height = 30)
+
 
     # table_name = ['BUS', 'CAR', 'FLIGHT', 'CITY', 'ROUTE', 'AMENITIES', 'COMPANY', 'EMPLOYEE']
     # row_counter = 4

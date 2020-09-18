@@ -13,6 +13,17 @@ def _from_rgb(rgb):
 
 def update_user(user_id):
 
+    def on_closing():
+        import homepage
+        update.destroy()
+        cursor.execute("SELECT CUSTOMER_NAME, CREDIT_POINTS, EMAIL_ID FROM CUSTOMER WHERE CUSTOMER_ID=%s;", [user_id])
+        records = cursor.fetchall()
+        user_name = records[0][0]
+        credit_points = records[0][1]
+        email = records[0][2]
+
+        homepage.homepage_screen(user_id, email, user_name, credit_points)
+
     def update_data(user_id, update):
         name1 = entry_name1.get()
         email1 = entry_email.get()
@@ -43,14 +54,20 @@ def update_user(user_id):
             if check[0][0] == 1:
                 messagebox.showwarning("Invalid request", "Email ID has already been taken. Please select another email id.")
             else:
-                args = cursor1.callproc("UPDATE_CUST_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
-                cursor1.execute("commit")
-                messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
-                update.destroy()
-                import login
-                login.main_screen()
-            cursor1.close()
-            con1.close()
+                try:
+                    phone1 = int(phone1)
+                    zipcode1 = int(zipcode1)
+                    if(len(str(phone1)) == 10 and len(str(zipcode1)) == 6):
+                        args = cursor1.callproc("UPDATE_CUST_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
+                        cursor1.execute("commit")
+                        messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
+                        update.destroy()
+                        import login
+                        login.main_screen()
+                    else:
+                        messagebox.showwarning("Code Error", "Please enter valid details.")
+                except:
+                    messagebox.showwarning("Code Error", "Please enter valid details.")
 
 
     update = tk.Tk()
@@ -161,8 +178,12 @@ def update_user(user_id):
     entry_contact.place(x=580, y=260)
 
 
-    update = tk.ttk.Button(update, text="Update values", command=partial(update_data, user_id, update))
-    update.place(x=550, y=300)
+    submit = tk.ttk.Button(update, text="Update values", command=partial(update_data, user_id, update))
+    submit.place(x=550, y=300)
+
+
+    update.protocol("WM_DELETE_WINDOW", on_closing)
+
 
     update.mainloop()
 

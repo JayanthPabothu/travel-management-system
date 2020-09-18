@@ -65,7 +65,7 @@ def crud_company():
 
                 if (len(str(zip_code1)) != 6):
                     messagebox.showwarning("Invalid request", "Enter a valid Zip Code.")
-                elif (len(phone1) != 10):
+                elif (len(str(phone1)) != 10):
                     messagebox.showwarning("Invalid request", "Enter a valid phone number.")
 
                 else:
@@ -73,7 +73,7 @@ def crud_company():
                     if (args[-1] == 1):
                         messagebox.showwarning("Company already exists", "Please enter a unique company.")
                     else:
-                        cursor.callproc("INSERT_COMPANY", [company_name1, email_ID1, int(phone1), street1, city1, int(zip_code1)])
+                        cursor.callproc("INSERT_COMPANY", [company_name1, email_ID1, phone1, street1, city1, zip_code1])
                         cursor.execute("commit")
                         company_name.delete(0, tk.END)
                         city.delete(0, tk.END)
@@ -202,13 +202,13 @@ def crud_company():
 
 
 
-    company_list = tk.Listbox(Company, height = 17, width = 50)
+    company_list = tk.Listbox(Company, height = 17, width = 70)
     company_list.grid(row = 4, column = 0, columnspan = 2, rowspan = 5)
 
     company_list.bind('<<ListboxSelect>>', get_selected_row)
 
     sb1= tk.Scrollbar(Company, width = 10)
-    sb1.grid(row=3, column=1, columnspan = 2, rowspan = 6)
+    sb1.grid(row=3, column=2, rowspan = 6)
 
     company_list.configure(yscrollcommand = sb1.set)
     sb1.configure(command = company_list.yview)

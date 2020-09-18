@@ -96,7 +96,7 @@ def crud_flight():
                     Premium.delete(0, tk.END)
                     Company.delete(0, tk.END)
                     view_flight()
-                    messagebox.showinfo("Request successful", "Successfully added city.")
+                    messagebox.showinfo("Request successful", "Successfully added flight.")
                 except:
                     messagebox.showwarning("Invalid Request", "Enter fields in proper format")
 

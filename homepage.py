@@ -23,8 +23,7 @@ def logout(homepage):
 def homepage_screen(user_id, user_email, user_name, credit_points):
 
     def history():
-        homepage.destroy()
-        booking_history.history_screen(user_id)
+        booking_history.history_screen(user_id, homepage)
 
 
     def get_journey():

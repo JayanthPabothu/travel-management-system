@@ -135,7 +135,7 @@ def crud_route():
     tk.Label(route, text="Time Taken:").grid(row = 0, column = 2)
     tk.Label(route, text="Available cities:").grid(row=1, column=2)
 
-    cursor.execute("SELECT CITY_NAME FROM CITY")
+    cursor.execute("SELECT CITY_CODE FROM CITY")
     cities = cursor.fetchall()
 
     seatnofc = tk.StringVar()
@@ -165,7 +165,7 @@ def crud_route():
     route_list.bind('<<ListboxSelect>>', get_selected_row)
 
     sb1= tk.Scrollbar(route, width = 10)
-    sb1.grid(row=2, column=1, columnspan = 2, rowspan = 5)
+    sb1.grid(row=3, column=1, columnspan = 2, rowspan = 2, sticky='ns')
 
     route_list.configure(yscrollcommand = sb1.set)
     sb1.configure(command = route_list.yview)

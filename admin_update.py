@@ -40,7 +40,7 @@ def update_user(user_id):
             con1 = mysql.connect(
                     host="localhost",
                     user="root",
-                    password="1234",
+                    password="testpassword",
                     database="FMS",
                     port=3306
                     )
@@ -50,14 +50,22 @@ def update_user(user_id):
             if check[0][0] == 1:
                 messagebox.showwarning("Invalid request", "Email ID has already been taken. Please select another email id.")
             else:
-                args = cursor1.callproc("UPDATE_ADMIN_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
-                cursor1.execute("commit")
-                messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
-                update.destroy()
-                import login
-                login.main_screen()
-            cursor1.close()
-            con1.close()
+                try:
+                    phone1 = int(phone1)
+                    zipcode1 = int(zipcode1)
+                    if(len(str(phone1)) == 10 and len(str(zipcode1)) == 6):
+                        args = cursor1.callproc("UPDATE_ADMIN_DETAILS", [int(user_id), str(name1), str(email1), str(password1), str(dob), str(street1), str(city1), int(zipcode1), int(phone1)])
+                        cursor1.execute("commit")
+                        messagebox.showinfo("Updation successful", "Your data has been successfully updated.")
+                        update.destroy()
+                        import login
+                        login.main_screen()
+                    else:
+                        messagebox.showwarning("Code Error", "Please enter valid details.")
+                except:
+                    messagebox.showwarning("Code Error", "Please enter valid details.")
+
+
 
 
     update = tk.Tk()
